@@ -1,24 +1,32 @@
 %{
 package parser
 
+type Statement struct {
+  Action string
+  Target string
+  Id string
+}
+
 %}
 
 %union {
   bytes []byte
   value string
+  statement Statement
   databaseId string
   tableName string
 }
 
-%token<bytes> CREATE ALTER DROP
-%token<bytes> DATABASE TABLE INDEX
+%token<string> CREATE ALTER DROP
+%token<string> DATABASE TABLE INDEX
 %token<bytes> PRIMARY KEY ASC DESC
 %token<bytes> INTERLEAVE IN PARENT
 %token<bytes> ARRAY OPTIONS
 %token<bytes> NOT NULL
 %token<bytes> ON DELETE CASCADE NO ACTION
-
 %token<bytes> true null allow_commit_timestamp
+
+%type<statement> create_database
 
 %token<value> decimal_value hex_value
 %token<databaseId> database_id
@@ -37,6 +45,9 @@ statement:
 
 create_database:
   CREATE DATABASE database_id
+  {
+    $$ = &Statement{Action: $1, Target, $2, Id: $3}
+  }
 
 create_table:
   CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster

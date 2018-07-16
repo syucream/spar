@@ -5,11 +5,18 @@ package parser
 import __yyfmt__ "fmt"
 
 //line src/parser/spanner.go.y:2
-//line src/parser/spanner.go.y:6
+type Statement struct {
+	Action string
+	Target string
+	Id     string
+}
+
+//line src/parser/spanner.go.y:12
 type yySymType struct {
 	yys        int
 	bytes      []byte
 	value      string
+	statement  Statement
 	databaseId string
 	tableName  string
 }
@@ -107,7 +114,7 @@ const yyLast = 5
 
 var yyAct = [...]int{
 
-	5, 4, 3, 2, 1,
+	5, 4, 3, 1, 2,
 }
 var yyPact = [...]int{
 
@@ -120,7 +127,7 @@ var yyPgo = [...]int{
 }
 var yyR1 = [...]int{
 
-	0, 1, 2, 3, 4, 4, 7, 5, 5, 11,
+	0, 2, 1, 3, 4, 4, 7, 5, 5, 11,
 	12, 12, 13, 14, 14, 14, 6, 8, 8, 16,
 	18, 17, 10, 10, 10, 9, 9, 15, 15, 15,
 	19,
@@ -134,7 +141,7 @@ var yyR2 = [...]int{
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, 4, 7, 31,
+	-1000, -2, -1, 4, 7, 31,
 }
 var yyDef = [...]int{
 
@@ -498,21 +505,27 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
+	case 2:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line src/parser/spanner.go.y:48
+		{
+			yyVAL.statement = &Statement{Action: yyDollar[1].string, Target, yyDollar[2].string, Id: yyDollar[3].databaseId}
+		}
 	case 19:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:78
+		//line src/parser/spanner.go.y:89
 		{
 			BOOL | INT64 | FLOAT64 | STRING(length) | BYTES(length) | DATE | TIMESTAMP
 		}
 	case 20:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:81
+		//line src/parser/spanner.go.y:92
 		{
 			int64_value | MAX
 		}
 	case 30:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:129
+		//line src/parser/spanner.go.y:140
 		{
 			decimal_value | hex_value
 		}
