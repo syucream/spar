@@ -11,14 +11,15 @@ type Statement struct {
 	Id     string
 }
 
-//line src/parser/spanner.go.y:12
+func setStatement(yylex interface{}, stmt Statement) {
+	yylex.(*Lexer).Stmt = stmt
+}
+
+//line src/parser/spanner.go.y:16
 type yySymType struct {
-	yys        int
-	bytes      []byte
-	value      string
-	statement  Statement
-	databaseId string
-	tableName  string
+	yys   int
+	bytes []byte
+	str   string
 }
 
 const CREATE = 57346
@@ -43,15 +44,23 @@ const DELETE = 57364
 const CASCADE = 57365
 const NO = 57366
 const ACTION = 57367
-const true = 57368
-const null = 57369
-const allow_commit_timestamp = 57370
-const decimal_value = 57371
-const hex_value = 57372
-const database_id = 57373
-const table_name = 57374
-const column_name = 57375
-const index_name = 57376
+const MAX = 57368
+const true = 57369
+const null = 57370
+const allow_commit_timestamp = 57371
+const BOOL = 57372
+const INT64 = 57373
+const FLOAT64 = 57374
+const STRING = 57375
+const BYTES = 57376
+const DATE = 57377
+const TIMESTAMP = 57378
+const database_id = 57379
+const decimal_value = 57380
+const hex_value = 57381
+const table_name = 57382
+const column_name = 57383
+const index_name = 57384
 
 var yyToknames = [...]string{
 	"$end",
@@ -79,12 +88,20 @@ var yyToknames = [...]string{
 	"CASCADE",
 	"NO",
 	"ACTION",
+	"MAX",
 	"true",
 	"null",
 	"allow_commit_timestamp",
+	"BOOL",
+	"INT64",
+	"FLOAT64",
+	"STRING",
+	"BYTES",
+	"DATE",
+	"TIMESTAMP",
+	"database_id",
 	"decimal_value",
 	"hex_value",
-	"database_id",
 	"table_name",
 	"column_name",
 	"index_name",
@@ -118,7 +135,7 @@ var yyAct = [...]int{
 }
 var yyPact = [...]int{
 
-	-2, -1000, -1000, -6, -31, -1000,
+	-2, -1000, -1000, -6, -37, -1000,
 }
 var yyPgo = [...]int{
 
@@ -129,19 +146,19 @@ var yyR1 = [...]int{
 
 	0, 2, 1, 3, 4, 4, 7, 5, 5, 11,
 	12, 12, 13, 14, 14, 14, 6, 8, 8, 16,
-	18, 17, 10, 10, 10, 9, 9, 15, 15, 15,
-	19,
+	16, 16, 16, 16, 16, 16, 18, 18, 17, 10,
+	10, 10, 9, 9, 15, 15, 15, 19, 19,
 }
 var yyR2 = [...]int{
 
 	0, 1, 3, 8, 0, 2, 4, 1, 2, 5,
-	0, 3, 2, 0, 1, 1, 5, 1, 1, 0,
-	0, 4, 0, 6, 6, 0, 2, 0, 3, 4,
-	0,
+	0, 3, 2, 0, 1, 1, 5, 1, 1, 1,
+	1, 1, 4, 4, 1, 1, 1, 1, 4, 0,
+	6, 6, 0, 2, 0, 3, 4, 1, 1,
 }
 var yyChk = [...]int{
 
-	-1000, -2, -1, 4, 7, 31,
+	-1000, -2, -1, 4, 7, 37,
 }
 var yyDef = [...]int{
 
@@ -153,16 +170,17 @@ var yyTok1 = [...]int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	35, 36, 3, 3, 37, 3, 3, 3, 3, 3,
+	43, 44, 3, 3, 45, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	38, 40, 39,
+	46, 48, 47,
 }
 var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
 	22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-	32, 33, 34,
+	32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+	42,
 }
 var yyTok3 = [...]int{
 	0,
@@ -507,27 +525,9 @@ yydefault:
 
 	case 2:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:48
+		//line src/parser/spanner.go.y:52
 		{
-			yyVAL.statement = &Statement{Action: yyDollar[1].string, Target, yyDollar[2].string, Id: yyDollar[3].databaseId}
-		}
-	case 19:
-		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:89
-		{
-			BOOL | INT64 | FLOAT64 | STRING(length) | BYTES(length) | DATE | TIMESTAMP
-		}
-	case 20:
-		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:92
-		{
-			int64_value | MAX
-		}
-	case 30:
-		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:140
-		{
-			decimal_value | hex_value
+			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
 		}
 	}
 	goto yystack /* stack new state and value */

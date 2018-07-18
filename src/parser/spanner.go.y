@@ -7,29 +7,33 @@ type Statement struct {
   Id string
 }
 
+func setStatement(yylex interface{}, stmt Statement) {
+  yylex.(*Lexer).Stmt = stmt
+}
+
 %}
 
 %union {
-  bytes []byte
-  value string
-  statement Statement
-  databaseId string
-  tableName string
+  bytes     []byte
+  str       string
 }
 
-%token<string> CREATE ALTER DROP
-%token<string> DATABASE TABLE INDEX
+%token<str> CREATE ALTER DROP
+%token<str> DATABASE TABLE INDEX
 %token<bytes> PRIMARY KEY ASC DESC
 %token<bytes> INTERLEAVE IN PARENT
 %token<bytes> ARRAY OPTIONS
 %token<bytes> NOT NULL
 %token<bytes> ON DELETE CASCADE NO ACTION
+%token<bytes> MAX
 %token<bytes> true null allow_commit_timestamp
+
+%token<bytes> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
 
 %type<statement> create_database
 
-%token<value> decimal_value hex_value
-%token<databaseId> database_id
+%token<str> database_id
+%token<str> decimal_value hex_value
 %token<tableName> table_name
 %token<columnName> column_name
 %token<indexName> index_name
@@ -46,7 +50,7 @@ statement:
 create_database:
   CREATE DATABASE database_id
   {
-    $$ = &Statement{Action: $1, Target, $2, Id: $3}
+    setStatement(yylex, Statement{Action: $1, Target: $2, Id: $3})
   }
 
 create_table:
@@ -86,10 +90,17 @@ column_type:
   | array_type
 
 scalar_type:
-  { BOOL | INT64 | FLOAT64 | STRING( length ) | BYTES( length ) | DATE | TIMESTAMP }
+    BOOL
+  | INT64
+  | FLOAT64
+  | STRING '(' length ')'
+  | BYTES '(' length ')'
+  | DATE
+  | TIMESTAMP
 
 length:
-  { int64_value | MAX }
+    int64_value
+  | MAX
 
 array_type:
   ARRAY '<' scalar_type '>'
@@ -137,7 +148,8 @@ drop_index:
 */
 
 int64_value:
-  { decimal_value | hex_value }
+    decimal_value
+  | hex_value
 
 /*
 decimal_value:

@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"bytes"
 	"io"
-	"strings"
 )
 
 // Token represents a lexical token.

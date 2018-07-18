@@ -5,7 +5,9 @@ import (
 )
 
 type Lexer struct {
-	scanner Scanner
+	scanner *Scanner
+
+	Stmt Statement
 }
 
 func NewLexer(r io.Reader) *Lexer {
@@ -15,10 +17,17 @@ func NewLexer(r io.Reader) *Lexer {
 }
 
 func (l *Lexer) Lex(lval *yySymType) int {
+SCAN:
 	tok, lit := l.scanner.Scan()
 
-	if tok == IDENT {
+	switch tok {
+	case IDENT:
+		lval.str = lit
+	default:
+		goto SCAN
 	}
+
+	return len(lit)
 }
 
 func (l *Lexer) Error(e string) {
