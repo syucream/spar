@@ -14,13 +14,13 @@ func setStatement(yylex interface{}, stmt Statement) {
 %}
 
 %union {
+  empty     struct{}
   bytes     []byte
   str       string
-  lastToken int
+
+  LastToken int
 }
 
-%token<str> CREATE ALTER DROP
-%token<str> DATABASE TABLE INDEX
 %token<bytes> PRIMARY KEY ASC DESC
 %token<bytes> INTERLEAVE IN PARENT
 %token<bytes> ARRAY OPTIONS
@@ -28,15 +28,18 @@ func setStatement(yylex interface{}, stmt Statement) {
 %token<bytes> ON DELETE CASCADE NO ACTION
 %token<bytes> MAX
 %token<bytes> true null allow_commit_timestamp
+%token<empty> '(' ',' ')'
+%token<str> CREATE ALTER DROP
+%token<str> DATABASE TABLE INDEX
 
 %token<bytes> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
 
 %type<statement> create_database
 
 %token<str> database_id
+%token<str> table_name
+%token<str> column_name
 %token<str> decimal_value hex_value
-%token<tableName> table_name
-%token<columnName> column_name
 %token<indexName> index_name
 
 %start statement
@@ -45,8 +48,9 @@ func setStatement(yylex interface{}, stmt Statement) {
 %%
 
 statement:
-  create_database
-/*   { create_database | create_table | create_index | alter_table | drop_table | drop_index } */
+    create_database
+  | create_table
+/* TODO  { create_index | alter_table | drop_table | drop_index } */
 
 create_database:
   CREATE DATABASE database_id
@@ -56,27 +60,30 @@ create_database:
 
 create_table:
   CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster
+  {
+    setStatement(yylex, Statement{Action: $1, Target: $2, Id: $3})
+  }
 
 column_def_opt:
-  /* empty */
-  | column_def_opt column_def
+    column_def
+  | column_def_opt ',' column_def
 
 column_def:
   column_name column_type null_opt options_def
 
 primary_keys:
     primary_key
-  | primary_keys primary_key
+  | primary_keys ',' primary_key
 
 primary_key:
   PRIMARY KEY '(' key_part_opt ')'
 
 key_part_opt:
-  /* empty */
-  | key_part ',' key_part_opt
+    key_part
+  | key_part_opt ',' key_part
 
 key_part:
-    column_name key_part_opt
+    column_name key_order_opt
 
 key_order_opt:
   /* empty */

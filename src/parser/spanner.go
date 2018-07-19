@@ -17,38 +17,40 @@ func setStatement(yylex interface{}, stmt Statement) {
 
 //line src/parser/spanner.go.y:16
 type yySymType struct {
-	yys       int
-	bytes     []byte
-	str       string
-	lastToken int
+	yys   int
+	empty struct{}
+	bytes []byte
+	str   string
+
+	LastToken int
 }
 
-const CREATE = 57346
-const ALTER = 57347
-const DROP = 57348
-const DATABASE = 57349
-const TABLE = 57350
-const INDEX = 57351
-const PRIMARY = 57352
-const KEY = 57353
-const ASC = 57354
-const DESC = 57355
-const INTERLEAVE = 57356
-const IN = 57357
-const PARENT = 57358
-const ARRAY = 57359
-const OPTIONS = 57360
-const NOT = 57361
-const NULL = 57362
-const ON = 57363
-const DELETE = 57364
-const CASCADE = 57365
-const NO = 57366
-const ACTION = 57367
-const MAX = 57368
-const true = 57369
-const null = 57370
-const allow_commit_timestamp = 57371
+const PRIMARY = 57346
+const KEY = 57347
+const ASC = 57348
+const DESC = 57349
+const INTERLEAVE = 57350
+const IN = 57351
+const PARENT = 57352
+const ARRAY = 57353
+const OPTIONS = 57354
+const NOT = 57355
+const NULL = 57356
+const ON = 57357
+const DELETE = 57358
+const CASCADE = 57359
+const NO = 57360
+const ACTION = 57361
+const MAX = 57362
+const true = 57363
+const null = 57364
+const allow_commit_timestamp = 57365
+const CREATE = 57366
+const ALTER = 57367
+const DROP = 57368
+const DATABASE = 57369
+const TABLE = 57370
+const INDEX = 57371
 const BOOL = 57372
 const INT64 = 57373
 const FLOAT64 = 57374
@@ -57,22 +59,16 @@ const BYTES = 57376
 const DATE = 57377
 const TIMESTAMP = 57378
 const database_id = 57379
-const decimal_value = 57380
-const hex_value = 57381
-const table_name = 57382
-const column_name = 57383
+const table_name = 57380
+const column_name = 57381
+const decimal_value = 57382
+const hex_value = 57383
 const index_name = 57384
 
 var yyToknames = [...]string{
 	"$end",
 	"error",
 	"$unk",
-	"CREATE",
-	"ALTER",
-	"DROP",
-	"DATABASE",
-	"TABLE",
-	"INDEX",
 	"PRIMARY",
 	"KEY",
 	"ASC",
@@ -93,6 +89,15 @@ var yyToknames = [...]string{
 	"true",
 	"null",
 	"allow_commit_timestamp",
+	"'('",
+	"','",
+	"')'",
+	"CREATE",
+	"ALTER",
+	"DROP",
+	"DATABASE",
+	"TABLE",
+	"INDEX",
 	"BOOL",
 	"INT64",
 	"FLOAT64",
@@ -101,14 +106,11 @@ var yyToknames = [...]string{
 	"DATE",
 	"TIMESTAMP",
 	"database_id",
-	"decimal_value",
-	"hex_value",
 	"table_name",
 	"column_name",
+	"decimal_value",
+	"hex_value",
 	"index_name",
-	"'('",
-	"')'",
-	"','",
 	"'<'",
 	"'>'",
 	"'='",
@@ -128,42 +130,71 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 5
+const yyLast = 85
 
 var yyAct = [...]int{
 
-	5, 4, 3, 1, 2,
+	58, 67, 55, 44, 34, 59, 25, 18, 19, 20,
+	21, 22, 23, 24, 12, 27, 61, 8, 7, 16,
+	4, 42, 5, 6, 63, 62, 45, 46, 18, 19,
+	20, 21, 22, 23, 24, 14, 13, 75, 74, 54,
+	53, 37, 52, 51, 33, 32, 9, 71, 72, 78,
+	60, 73, 49, 69, 48, 47, 76, 77, 36, 11,
+	41, 31, 40, 56, 70, 50, 65, 66, 38, 28,
+	43, 17, 68, 64, 29, 57, 39, 30, 15, 35,
+	26, 10, 3, 1, 2,
 }
 var yyPact = [...]int{
 
-	-2, -1000, -1000, -6, -37, -1000,
+	-7, -1000, -1000, -1000, -8, -22, -24, -1000, 22, -28,
+	10, -1000, -5, 65, -28, 48, -1000, -1000, -1000, -1000,
+	-1000, 21, 20, -1000, -1000, -42, 33, -1000, 63, -1000,
+	50, 46, -17, -17, -26, -1000, 65, 56, 19, -1000,
+	18, -1000, 14, -1000, -1000, -1000, -1000, 13, -45, -1000,
+	53, -37, 27, -1000, -1000, -1000, -25, -1, -1000, 60,
+	-47, 38, -1000, -37, -1000, -1000, -1000, 26, -1000, 35,
+	-1000, 12, 11, 39, -1000, -1000, -1000, 30, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 4, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	0, 84, 83, 82, 81, 80, 79, 59, 78, 77,
+	76, 15, 75, 0, 73, 72, 19, 71, 21, 70,
 }
 var yyR1 = [...]int{
 
-	0, 2, 1, 3, 4, 4, 7, 5, 5, 11,
-	12, 12, 13, 14, 14, 14, 6, 8, 8, 16,
-	16, 16, 16, 16, 16, 16, 18, 18, 17, 10,
-	10, 10, 9, 9, 15, 15, 15, 19, 19,
+	0, 2, 2, 1, 3, 4, 4, 7, 5, 5,
+	11, 12, 12, 13, 14, 14, 14, 6, 8, 8,
+	16, 16, 16, 16, 16, 16, 16, 18, 18, 17,
+	10, 10, 10, 9, 9, 15, 15, 15, 19, 19,
 }
 var yyR2 = [...]int{
 
-	0, 1, 3, 8, 0, 2, 4, 1, 2, 5,
-	0, 3, 2, 0, 1, 1, 5, 1, 1, 1,
-	1, 1, 4, 4, 1, 1, 1, 1, 4, 0,
-	6, 6, 0, 2, 0, 3, 4, 1, 1,
+	0, 1, 1, 3, 8, 1, 3, 4, 1, 3,
+	5, 1, 3, 2, 0, 1, 1, 5, 1, 1,
+	1, 1, 1, 4, 4, 1, 1, 1, 1, 4,
+	0, 6, 6, 0, 2, 0, 3, 4, 1, 1,
 }
 var yyChk = [...]int{
 
-	-1000, -2, -1, 4, 7, 37,
+	-1000, -2, -1, -3, 27, 30, 31, 40, 41, 24,
+	-4, -7, 42, 26, 25, -8, -16, -17, 33, 34,
+	35, 36, 37, 38, 39, 11, -5, -11, 4, -7,
+	-9, 13, 24, 24, 46, -6, 25, 8, 5, -10,
+	12, 14, -18, -19, 20, 43, 44, -18, -16, -11,
+	9, 24, 24, 26, 26, 47, 10, -12, -13, 42,
+	23, 41, 26, 25, -14, 6, 7, 48, -15, 15,
+	-13, 21, 22, 16, 26, 26, 17, 18, 19,
 }
 var yyDef = [...]int{
 
-	0, -2, 1, 0, 0, 2,
+	0, -2, 1, 2, 0, 0, 0, 3, 0, 0,
+	0, 5, 0, 0, 0, 33, 18, 19, 20, 21,
+	22, 0, 0, 25, 26, 0, 0, 8, 0, 6,
+	30, 0, 0, 0, 0, 4, 0, 0, 0, 7,
+	0, 34, 0, 27, 28, 38, 39, 0, 0, 9,
+	0, 0, 0, 23, 24, 29, 0, 0, 11, 14,
+	0, 35, 10, 0, 13, 15, 16, 0, 17, 0,
+	12, 0, 0, 0, 31, 32, 36, 0, 37,
 }
 var yyTok1 = [...]int{
 
@@ -171,7 +202,7 @@ var yyTok1 = [...]int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	43, 44, 3, 3, 45, 3, 3, 3, 3, 3,
+	24, 26, 3, 3, 25, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	46, 48, 47,
 }
@@ -179,9 +210,9 @@ var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-	22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-	32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
-	42,
+	22, 23, 27, 28, 29, 30, 31, 32, 33, 34,
+	35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+	45,
 }
 var yyTok3 = [...]int{
 	0,
@@ -524,9 +555,15 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
-	case 2:
+	case 3:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:53
+		//line src/parser/spanner.go.y:57
+		{
+			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
+		}
+	case 4:
+		yyDollar = yyS[yypt-8 : yypt+1]
+		//line src/parser/spanner.go.y:63
 		{
 			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
 		}

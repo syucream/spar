@@ -21,8 +21,10 @@ const (
 	IDENT // main
 
 	// Misc characters
-	ASTERISK // *
-	COMMA    // ,
+	ASTERISK          // *
+	COMMA             // ,
+	LEFT_PARENTHESIS  // (
+	RIGHT_PARENTHESIS // )
 )
 
 // Scanner represents a lexical scanner.
@@ -59,6 +61,10 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		return ASTERISK, string(ch)
 	case ',':
 		return COMMA, string(ch)
+	case '(':
+		return LEFT_PARENTHESIS, string(ch)
+	case ')':
+		return RIGHT_PARENTHESIS, string(ch)
 	}
 
 	return ILLEGAL, string(ch)

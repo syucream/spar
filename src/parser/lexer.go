@@ -68,6 +68,8 @@ SCAN:
 		// Stop lex
 		return 0
 	case IDENT:
+		// case LEFT_PARENTHESIS:
+		// case RIGHT_PARENTHESIS:
 		lval.str = lit
 	case WS:
 		// Skip
@@ -81,13 +83,16 @@ SCAN:
 	if v, ok := keywords[lit]; ok {
 		tokVal = v
 	} else {
-		switch lval.lastToken {
+		switch lval.LastToken {
 		case DATABASE:
 			tokVal = database_id
+		case TABLE:
+			tokVal = table_name
 		}
 	}
+	log.Println(tokVal)
 
-	lval.lastToken = tokVal
+	lval.LastToken = tokVal
 	return tokVal
 }
 
