@@ -5,6 +5,48 @@ import (
 	"log"
 )
 
+var keywords = map[string]int{
+	"CREATE":     CREATE,
+	"ALTER":      ALTER,
+	"DROP":       DROP,
+	"DATABASE":   DATABASE,
+	"TABLE":      TABLE,
+	"INDEX":      INDEX,
+	"PRIMARY":    PRIMARY,
+	"KEY":        KEY,
+	"ASC":        ASC,
+	"DESC":       DESC,
+	"INTERLEAVE": INTERLEAVE,
+	"IN":         IN,
+	"PARENT":     PARENT,
+	"ARRAY":      ARRAY,
+	"OPTIONS":    OPTIONS,
+	"NOT":        NOT,
+	"NULL":       NULL,
+	"ON":         ON,
+	"DELETE":     DELETE,
+	"CASCADE":    CASCADE,
+	"NO":         NO,
+	"ACTION":     ACTION,
+	"MAX":        MAX,
+	"true":       true,
+	"null":       null,
+	"allow_commit_timestamp": allow_commit_timestamp,
+	"BOOL":          BOOL,
+	"INT64":         INT64,
+	"FLOAT64":       FLOAT64,
+	"STRING":        STRING,
+	"BYTES":         BYTES,
+	"DATE":          DATE,
+	"TIMESTAMP":     TIMESTAMP,
+	"database_id":   database_id,
+	"decimal_value": decimal_value,
+	"hex_value":     hex_value,
+	"table_name":    table_name,
+	"column_name":   column_name,
+	"index_name":    index_name,
+}
+
 type Lexer struct {
 	scanner *Scanner
 
@@ -35,19 +77,17 @@ SCAN:
 	}
 	log.Println(lit)
 
-	// TODO easy to tokenize
-	// Use prepared map?
 	tokVal := 0
-	switch lit {
-	case "CREATE":
-		tokVal = CREATE
-	case "DATABASE":
-		tokVal = DATABASE
-	default:
-		// TODO check last token is DATABASE!!!
-		tokVal = database_id
+	if v, ok := keywords[lit]; ok {
+		tokVal = v
+	} else {
+		switch lval.lastToken {
+		case DATABASE:
+			tokVal = database_id
+		}
 	}
 
+	lval.lastToken = tokVal
 	return tokVal
 }
 

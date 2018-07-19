@@ -16,6 +16,7 @@ func setStatement(yylex interface{}, stmt Statement) {
 %union {
   bytes     []byte
   str       string
+  lastToken int
 }
 
 %token<str> CREATE ALTER DROP

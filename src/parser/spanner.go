@@ -17,9 +17,10 @@ func setStatement(yylex interface{}, stmt Statement) {
 
 //line src/parser/spanner.go.y:16
 type yySymType struct {
-	yys   int
-	bytes []byte
-	str   string
+	yys       int
+	bytes     []byte
+	str       string
+	lastToken int
 }
 
 const CREATE = 57346
@@ -525,7 +526,7 @@ yydefault:
 
 	case 2:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:52
+		//line src/parser/spanner.go.y:53
 		{
 			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
 		}
