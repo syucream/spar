@@ -7,8 +7,8 @@ type Statement struct {
   Id string
 }
 
-func setStatement(yylex interface{}, stmt Statement) {
-  yylex.(*Lexer).Stmt = stmt
+func setStatement(yylex interface{}, stmt *Statement) {
+  yylex.(*LexerWrapper).Result = stmt
 }
 
 %}
@@ -55,13 +55,13 @@ statement:
 create_database:
   CREATE DATABASE database_id
   {
-    setStatement(yylex, Statement{Action: $1, Target: $2, Id: $3})
+    setStatement(yylex, &Statement{Action: $1, Target: $2, Id: $3})
   }
 
 create_table:
   CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster
   {
-    setStatement(yylex, Statement{Action: $1, Target: $2, Id: $3})
+    setStatement(yylex, &Statement{Action: $1, Target: $2, Id: $3})
   }
 
 column_def_opt:

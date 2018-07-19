@@ -11,8 +11,8 @@ type Statement struct {
 	Id     string
 }
 
-func setStatement(yylex interface{}, stmt Statement) {
-	yylex.(*Lexer).Stmt = stmt
+func setStatement(yylex interface{}, stmt *Statement) {
+	yylex.(*LexerWrapper).Result = stmt
 }
 
 //line src/parser/spanner.go.y:16
@@ -559,13 +559,13 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line src/parser/spanner.go.y:57
 		{
-			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
+			setStatement(yylex, &Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
 		}
 	case 4:
 		yyDollar = yyS[yypt-8 : yypt+1]
 		//line src/parser/spanner.go.y:63
 		{
-			setStatement(yylex, Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
+			setStatement(yylex, &Statement{Action: yyDollar[1].str, Target: yyDollar[2].str, Id: yyDollar[3].str})
 		}
 	}
 	goto yystack /* stack new state and value */

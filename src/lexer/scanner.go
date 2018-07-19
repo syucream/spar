@@ -1,6 +1,6 @@
 // Copy from https://github.com/benbjohnson/sql-parser
 //
-package parser
+package lexer
 
 import (
 	"bufio"

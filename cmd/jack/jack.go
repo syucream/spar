@@ -17,6 +17,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	stmt := parser.ParseSpannerDDL(strings.NewReader(string(data)))
+	stmt := parser.Parse(strings.NewReader(string(data)))
 	fmt.Println(stmt)
 }

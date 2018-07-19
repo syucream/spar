@@ -1,10 +1,5 @@
 package parser
 
-import (
-	"io"
-	"log"
-)
-
 var keywords = map[string]int{
 	"CREATE":     CREATE,
 	"ALTER":      ALTER,
@@ -47,55 +42,21 @@ var keywords = map[string]int{
 	"index_name":    index_name,
 }
 
-type Lexer struct {
-	scanner *Scanner
+type KeywordTokenizer struct{}
 
-	Stmt Statement
-}
-
-func NewLexer(r io.Reader) *Lexer {
-	return &Lexer{
-		scanner: NewScanner(r),
-	}
-}
-
-func (l *Lexer) Lex(lval *yySymType) int {
-SCAN:
-	tok, lit := l.scanner.Scan()
-
-	switch tok {
-	case EOF:
-		// Stop lex
-		return 0
-	case IDENT:
-		// case LEFT_PARENTHESIS:
-		// case RIGHT_PARENTHESIS:
-		lval.str = lit
-	case WS:
-		// Skip
-		goto SCAN
-	default:
-		log.Fatalf("Unexpected token: token: %d, literal: %s\n", tok, lit)
-	}
-	log.Println(lit)
-
+func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 	tokVal := 0
+
 	if v, ok := keywords[lit]; ok {
 		tokVal = v
 	} else {
-		switch lval.LastToken {
+		switch lastToken {
 		case DATABASE:
 			tokVal = database_id
 		case TABLE:
 			tokVal = table_name
 		}
 	}
-	log.Println(tokVal)
 
-	lval.LastToken = tokVal
 	return tokVal
-}
-
-func (l *Lexer) Error(e string) {
-	panic(e)
 }
