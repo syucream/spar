@@ -40,7 +40,7 @@ SCAN:
 	switch tok {
 	case EOF:
 		// Stop lex
-	case IDENT, LEFT_PARENTHESIS, RIGHT_PARENTHESIS:
+	case IDENT, LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA:
 		result.Literal = lit
 	case WS:
 		// Skip
