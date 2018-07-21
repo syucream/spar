@@ -28,7 +28,7 @@ func setStatement(yylex interface{}, stmt *Statement) {
 %token<bytes> ON DELETE CASCADE NO ACTION
 %token<bytes> MAX
 %token<bytes> true null allow_commit_timestamp
-%token<empty> '(' ',' ')'
+%token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
 

@@ -1,5 +1,9 @@
 package parser
 
+import (
+	"strconv"
+)
+
 const (
 	LEFT_PARENTHESIS_TOKEN  = int('(')
 	RIGHT_PARENTHESIS_TOKEN = int(')')
@@ -63,6 +67,8 @@ func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 		tokVal = v
 	} else if v, ok := symbols[lit]; ok {
 		tokVal = v
+	} else if _, err := strconv.ParseInt(lit, 10, 0); err == nil {
+		tokVal = decimal_value
 	} else {
 		switch lastToken {
 		case DATABASE:
