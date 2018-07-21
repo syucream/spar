@@ -42,12 +42,19 @@ var keywords = map[string]int{
 	"index_name":    index_name,
 }
 
+var symbols = map[string]int{
+	"(": int('('),
+	")": int(')'),
+}
+
 type KeywordTokenizer struct{}
 
 func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 	tokVal := 0
 
 	if v, ok := keywords[lit]; ok {
+		tokVal = v
+	} else if v, ok := symbols[lit]; ok {
 		tokVal = v
 	} else {
 		switch lastToken {
