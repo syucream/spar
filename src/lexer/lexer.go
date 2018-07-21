@@ -3,6 +3,7 @@ package lexer
 import (
 	"fmt"
 	"io"
+	"log"
 )
 
 var (
@@ -40,12 +41,13 @@ SCAN:
 	switch tok {
 	case EOF:
 		// Stop lex
-	case IDENT, LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA:
+	case IDENT, NUMBER, LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA:
 		result.Literal = lit
 	case WS:
 		// Skip
 		goto SCAN
 	default:
+		log.Printf("UnexpectedToken: tok is %d, lit is %s\n", tok, lit)
 		return nil, UnexpectedTokenErr
 	}
 

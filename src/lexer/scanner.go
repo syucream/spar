@@ -18,7 +18,8 @@ const (
 	WS
 
 	// Literals
-	IDENT // main
+	IDENT  // main
+	NUMBER // number literal
 
 	// Misc characters
 	ASTERISK          // *
@@ -51,6 +52,9 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 	} else if isLetter(ch) {
 		s.unread()
 		return s.scanIdent()
+	} else if isDigit(ch) {
+		s.unread()
+		return s.scanNumber()
 	}
 
 	// Otherwise read the individual character.
@@ -112,6 +116,29 @@ func (s *Scanner) scanIdent() (tok Token, lit string) {
 	}
 
 	return IDENT, buf.String()
+}
+
+// scanIdent consumes the current rune and all contiguous ident runes.
+// NOTE: 0b and 0x prefixes are not supported.
+func (s *Scanner) scanNumber() (tok Token, lit string) {
+	// Create a buffer and read the current character into it.
+	var buf bytes.Buffer
+	buf.WriteRune(s.read())
+
+	// Read every subsequent ident character into the buffer.
+	// Non-ident characters and EOF will cause the loop to exit.
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isDigit(ch) {
+			s.unread()
+			break
+		} else {
+			_, _ = buf.WriteRune(ch)
+		}
+	}
+
+	return NUMBER, buf.String()
 }
 
 // read reads the next rune from the buffered reader.
