@@ -4,4 +4,4 @@ CREATE TABLE Singers (
   LastName   STRING(1024),
   SingerInfo BYTES(MAX),
   BirthDate  DATE,
-);
+) PRIMARY KEY (SingerId);

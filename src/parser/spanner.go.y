@@ -48,8 +48,8 @@ func setStatement(yylex interface{}, stmt *Statement) {
 %%
 
 statement:
-    create_database
-  | create_table
+    create_database ';'
+  | create_table ';'
 /* TODO  { create_index | alter_table | drop_table | drop_index } */
 
 create_database:
@@ -59,7 +59,7 @@ create_database:
   }
 
 create_table:
-  CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster
+  CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster_opt
   {
     setStatement(yylex, &Statement{Action: $1, Target: $2, Id: $3})
   }
@@ -90,8 +90,12 @@ key_order_opt:
   | ASC
   | DESC
 
+cluster_opt:
+  /* empty */
+  | cluster
+
 cluster:
-    INTERLEAVE IN PARENT table_name cluster_opt
+    INTERLEAVE IN PARENT table_name cluster_on_delete
 
 column_type:
     scalar_type
@@ -122,7 +126,7 @@ null_opt:
   /* empty */
   | NOT NULL
   
-cluster_opt:
+cluster_on_delete:
   /* empty */
   | ON DELETE CASCADE
   | ON DELETE NO ACTION

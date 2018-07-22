@@ -8,6 +8,7 @@ const (
 	LEFT_PARENTHESIS_TOKEN  = int('(')
 	RIGHT_PARENTHESIS_TOKEN = int(')')
 	COMMA_TOKEN             = int(',')
+	SEMICOLON_TOKEN         = int(';')
 )
 
 var keywords = map[string]int{
@@ -56,6 +57,7 @@ var symbols = map[string]int{
 	"(": LEFT_PARENTHESIS_TOKEN,
 	")": RIGHT_PARENTHESIS_TOKEN,
 	",": COMMA_TOKEN,
+	";": SEMICOLON_TOKEN,
 }
 
 type KeywordTokenizer struct{}

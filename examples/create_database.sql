@@ -1,1 +1,1 @@
-CREATE DATABASE examples
+CREATE DATABASE examples;

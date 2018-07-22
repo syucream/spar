@@ -26,6 +26,7 @@ const (
 	COMMA             // ,
 	LEFT_PARENTHESIS  // (
 	RIGHT_PARENTHESIS // )
+	SEMICOLON         // ;
 )
 
 // Scanner represents a lexical scanner.
@@ -69,6 +70,8 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		return LEFT_PARENTHESIS, string(ch)
 	case ')':
 		return RIGHT_PARENTHESIS, string(ch)
+	case ';':
+		return SEMICOLON, string(ch)
 	}
 
 	return ILLEGAL, string(ch)
