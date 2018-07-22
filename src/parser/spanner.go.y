@@ -65,8 +65,9 @@ create_table:
   }
 
 column_def_opt:
-    column_def
-  | column_def_opt ',' column_def
+  /* empty */
+  | column_def
+  | column_def ',' column_def_opt
 
 column_def:
   column_name column_type null_opt options_def
