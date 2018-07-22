@@ -1,22 +1,15 @@
 %{
 package parser
-
-type Statement struct {
-  Action string
-  Target string
-  Id string
-}
-
-func setStatement(yylex interface{}, stmt *Statement) {
-  yylex.(*LexerWrapper).Result = stmt
-}
-
 %}
 
 %union {
   empty     struct{}
   bytes     []byte
   str       string
+  strs      string
+
+  col       Column
+  cols      []Column
 
   LastToken int
 }
@@ -39,8 +32,16 @@ func setStatement(yylex interface{}, stmt *Statement) {
 %token<str> database_id
 %token<str> table_name
 %token<str> column_name
-%token<str> decimal_value hex_value
 %token<indexName> index_name
+
+%token<col> column_def
+%token<cols> column_def_opt
+%token<str> column_type scalar_type array_type length
+%token<str> decimal_value hex_value
+
+%token<str> primary_key
+%token<str> key_part
+%token<strs> key_part_opt
 
 %start statement
 
@@ -55,36 +56,58 @@ statement:
 create_database:
   CREATE DATABASE database_id
   {
-    setStatement(yylex, &Statement{Action: $1, Target: $2, Id: $3})
+    SetCreateDatabaseStatement(yylex, $1, $2, $3)
   }
 
 create_table:
-  CREATE TABLE table_name '(' column_def_opt ')' primary_keys cluster_opt
+  CREATE TABLE table_name '(' column_def_opt ')' primary_key cluster_opt
   {
-    setStatement(yylex, &Statement{Action: $1, Target: $2, Id: $3})
+    SetCreateTableStatement(yylex, $1, $2, $3, $5, $7)
   }
 
 column_def_opt:
   /* empty */
+  {
+    $$ = make([]Column, 0, 0)
+  }
   | column_def
-  | column_def ',' column_def_opt
+  {
+    $$ = make([]Column, 0, 1)
+    $$ = append($$, $1)
+  }
+  | column_def_opt ',' column_def
+  {
+    $$ = append($3, $1)
+  }
 
 column_def:
   column_name column_type null_opt options_def
-
-primary_keys:
-    primary_key
-  | primary_keys ',' primary_key
+  {
+    $$ = Column{Name: $1, Type: $2}
+  }
 
 primary_key:
   PRIMARY KEY '(' key_part_opt ')'
+  {
+    $$ = $4
+  }
 
 key_part_opt:
     key_part
+  {
+    $$ = make([]string, 0, 1)
+    $$ = append($$, $1)
+  }
   | key_part_opt ',' key_part
+  {
+    $$ = append($1, $3)
+  }
 
 key_part:
-    column_name key_order_opt
+  column_name key_order_opt
+  {
+    $$ = $1
+  }
 
 key_order_opt:
   /* empty */
@@ -100,23 +123,59 @@ cluster:
 
 column_type:
     scalar_type
+  {
+    $$ = $1
+  }
   | array_type
+  {
+    $$ = $1
+  }
 
 scalar_type:
     BOOL
+  {
+    $$ = $1
+  }
   | INT64
+  {
+    $$ = $1
+  }
   | FLOAT64
+  {
+    $$ = $1
+  }
   | STRING '(' length ')'
+  {
+    $$ = $1 + "(" + $3 + ")"
+  }
   | BYTES '(' length ')'
+  {
+    $$ = $1 + "(" + $3 + ")"
+  }
   | DATE
+  {
+    $$ = $1
+  }
   | TIMESTAMP
+  {
+    $$ = $1
+  }
 
 length:
     int64_value
+  {
+    $$ = $1
+  }
   | MAX
+  {
+    $$ = "2621440"
+  }
 
 array_type:
   ARRAY '<' scalar_type '>'
+  {
+    $$ = $1 + "(" + $3 + ")"
+  }
 
 options_def:
   /* empty */
