@@ -1,6 +1,9 @@
 package parser
 
-// TODO DDStatements
+type DDStatements struct {
+	CreateDatabases []CreateDatabaseStatement
+	CreateTables    []CreateTableStatement
+}
 
 type DDStatement struct {
 	Action string // CREATE, ALTER, DROP
@@ -19,11 +22,12 @@ type CreateDatabaseStatement struct {
 }
 
 func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
-	yylex.(*LexerWrapper).Result = &CreateDatabaseStatement{
+	s := &CreateDatabaseStatement{
 		Action: action,
 		Target: target,
 		Id:     id,
 	}
+	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
 }
 
 type CreateTableStatement struct {
@@ -34,11 +38,12 @@ type CreateTableStatement struct {
 }
 
 func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Columns, pks []string) {
-	yylex.(*LexerWrapper).Result = &CreateTableStatement{
+	s := &CreateTableStatement{
 		Action:      action,
 		Target:      target,
 		Id:          id,
 		Columns:     cols,
 		PrimaryKeys: pks,
 	}
+	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
 }

@@ -8,12 +8,16 @@ import (
 
 type LexerWrapper struct {
 	impl   *lexer.LexerImpl
-	Result *Statement
+	Result *DDStatements
 }
 
 func NewLexerWrapper(li *lexer.LexerImpl) *LexerWrapper {
 	return &LexerWrapper{
 		impl: li,
+		Result: &DDStatements{
+			CreateDatabases: []CreateDatabaseStatement{},
+			CreateTables:    []CreateTableStatement{},
+		},
 	}
 }
 
