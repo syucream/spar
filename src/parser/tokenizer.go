@@ -77,6 +77,10 @@ func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 			tokVal = database_id
 		case TABLE:
 			tokVal = table_name
+		case INDEX:
+			tokVal = index_name
+		case ON: // TODO duplicated token! Check pre-parsed tokens more!
+			tokVal = table_name
 		case LEFT_PARENTHESIS_TOKEN, COMMA_TOKEN:
 			tokVal = column_name
 		}

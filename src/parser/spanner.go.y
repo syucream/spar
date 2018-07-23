@@ -213,7 +213,8 @@ column_name_list:
   | column_name_list ',' column_name
 
 interleave_clause_list:
-    interleave_clause
+  /* empty */
+  | interleave_clause
   | interleave_clause_list ',' interleave_clause
 
 interleave_clause:

@@ -9,7 +9,6 @@ import __yyfmt__ "fmt"
 type yySymType struct {
 	yys       int
 	empty     struct{}
-	bytes     []byte
 	str       string
 	strs      []string
 	col       Column
@@ -173,7 +172,7 @@ var yyR1 = [...]int{
 	16, 20, 3, 3, 4, 4, 4, 4, 4, 4,
 	4, 6, 6, 5, 18, 18, 18, 17, 17, 21,
 	21, 21, 15, 22, 22, 23, 23, 24, 24, 26,
-	27, 27, 25, 25, 28, 7, 7,
+	27, 27, 25, 25, 25, 28, 7, 7,
 }
 var yyR2 = [...]int{
 
@@ -182,7 +181,7 @@ var yyR2 = [...]int{
 	1, 5, 1, 1, 1, 1, 1, 4, 4, 1,
 	1, 1, 1, 4, 0, 6, 6, 0, 2, 0,
 	3, 4, 12, 0, 1, 0, 1, 0, 1, 4,
-	1, 3, 1, 3, 3, 1, 1,
+	1, 3, 0, 1, 3, 3, 1, 1,
 }
 var yyChk = [...]int{
 
@@ -205,12 +204,12 @@ var yyDef = [...]int{
 	0, 0, 9, 0, 0, 0, 8, 37, 22, 23,
 	24, 25, 26, 0, 0, 29, 30, 0, 0, 19,
 	0, 10, 34, 0, 0, 0, 0, 0, 7, 20,
-	0, 0, 11, 0, 38, 0, 31, 32, 55, 56,
+	0, 0, 11, 0, 38, 0, 31, 32, 56, 57,
 	0, 0, 0, 0, 0, 0, 27, 28, 33, 0,
 	13, 16, 0, 0, 0, 0, 47, 15, 17, 18,
-	39, 12, 0, 14, 0, 48, 0, 21, 0, 0,
-	0, 42, 52, 0, 0, 0, 35, 36, 0, 0,
-	0, 50, 40, 0, 53, 54, 49, 0, 41, 51,
+	39, 12, 0, 14, 52, 48, 0, 21, 0, 0,
+	0, 42, 53, 0, 0, 0, 35, 36, 0, 0,
+	0, 50, 40, 0, 54, 55, 49, 0, 41, 51,
 }
 var yyTok1 = [...]int{
 
@@ -573,145 +572,145 @@ yydefault:
 
 	case 6:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:58
+		//line src/parser/spanner.go.y:57
 		{
 			SetCreateDatabaseStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str)
 		}
 	case 7:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line src/parser/spanner.go.y:64
+		//line src/parser/spanner.go.y:63
 		{
 			SetCreateTableStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str, yyDollar[5].cols, yyDollar[7].strs)
 		}
 	case 8:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:70
+		//line src/parser/spanner.go.y:69
 		{
 			yyVAL.cols = make([]Column, 0, 0)
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:74
+		//line src/parser/spanner.go.y:73
 		{
 			yyVAL.cols = make([]Column, 0, 1)
 			yyVAL.cols = append(yyVAL.cols, yyDollar[1].col)
 		}
 	case 10:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:79
+		//line src/parser/spanner.go.y:78
 		{
 			yyVAL.cols = append(yyDollar[3].cols, yyDollar[1].col)
 		}
 	case 11:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:85
+		//line src/parser/spanner.go.y:84
 		{
 			yyVAL.col = Column{Name: yyDollar[1].str, Type: yyDollar[2].str}
 		}
 	case 12:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line src/parser/spanner.go.y:91
+		//line src/parser/spanner.go.y:90
 		{
 			yyVAL.strs = yyDollar[4].strs
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:97
+		//line src/parser/spanner.go.y:96
 		{
 			yyVAL.strs = make([]string, 0, 1)
 			yyVAL.strs = append(yyVAL.strs, yyDollar[1].str)
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:102
+		//line src/parser/spanner.go.y:101
 		{
 			yyVAL.strs = append(yyDollar[1].strs, yyDollar[3].str)
 		}
 	case 15:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line src/parser/spanner.go.y:108
+		//line src/parser/spanner.go.y:107
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:126
+		//line src/parser/spanner.go.y:125
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:130
+		//line src/parser/spanner.go.y:129
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:136
+		//line src/parser/spanner.go.y:135
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:140
+		//line src/parser/spanner.go.y:139
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:144
+		//line src/parser/spanner.go.y:143
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 27:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:148
+		//line src/parser/spanner.go.y:147
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 28:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:152
+		//line src/parser/spanner.go.y:151
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:156
+		//line src/parser/spanner.go.y:155
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:160
+		//line src/parser/spanner.go.y:159
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:166
+		//line src/parser/spanner.go.y:165
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:170
+		//line src/parser/spanner.go.y:169
 		{
 			yyVAL.str = "2621440"
 		}
 	case 33:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:176
+		//line src/parser/spanner.go.y:175
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
-	case 55:
+	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:243
 		{
 			yyVAL.str = yyDollar[1].str
 		}
-	case 56:
+	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:247
 		{
