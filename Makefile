@@ -12,3 +12,4 @@ build: spanner.go
 check-cli: build
 	./jack examples/create_database.sql
 	./jack examples/create_table.sql
+	./jack examples/composition.sql

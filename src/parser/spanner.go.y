@@ -38,10 +38,14 @@ package parser
 %type<str> key_part
 %type<strs> key_part_list
 
-%start statement
+%start statements
 
 
 %%
+
+statements:
+    statement
+  | statements statement
 
 statement:
     create_database ';'
