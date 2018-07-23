@@ -22,10 +22,7 @@ package parser
 %token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
-
 %token<str> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
-
-// %type<statement> create_database create_table
 
 %token<str> database_id
 %token<str> table_name
@@ -73,9 +70,9 @@ column_def_opt:
     $$ = make([]Column, 0, 1)
     $$ = append($$, $1)
   }
-  | column_def_opt ',' column_def
+  | column_def ',' column_def_opt
   {
-    $$ = append($1, $3)
+    $$ = append($3, $1)
   }
 
 column_def:
