@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/syucream/jack/src/parser"
+	"github.com/syucream/jack/src/spanner2mysql"
 )
 
 func main() {
@@ -17,6 +18,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	stmt := parser.Parse(strings.NewReader(string(data)))
-	fmt.Println(stmt)
+	stmts := parser.Parse(strings.NewReader(string(data)))
+	fmt.Println(stmts)
+
+	mysqlStmts, err := spanner2mysql.GetMysqlCreateTables(stmts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(mysqlStmts)
 }
