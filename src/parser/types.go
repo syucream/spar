@@ -5,7 +5,7 @@ type DDStatements struct {
 	CreateTables    []CreateTableStatement
 }
 
-type DDStatement struct {
+type Statement struct {
 	Action string // CREATE, ALTER, DROP
 	Target string // DATABASE, TABLE, INDEX
 	Id     string
@@ -18,30 +18,34 @@ type Column struct {
 }
 
 type CreateDatabaseStatement struct {
-	DDStatement
+	Statement
 }
 
 func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
-	s := &CreateDatabaseStatement{
-		Action: action,
-		Target: target,
-		Id:     id,
+	s := CreateDatabaseStatement{
+		Statement: Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
 	}
 	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
 }
 
 type CreateTableStatement struct {
-	DDStatement
+	Statement
 
 	Columns     []Column
 	PrimaryKeys []string
 }
 
-func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Columns, pks []string) {
-	s := &CreateTableStatement{
-		Action:      action,
-		Target:      target,
-		Id:          id,
+func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Column, pks []string) {
+	s := CreateTableStatement{
+		Statement: Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
 		Columns:     cols,
 		PrimaryKeys: pks,
 	}

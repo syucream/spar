@@ -11,7 +11,7 @@ type yySymType struct {
 	empty     struct{}
 	bytes     []byte
 	str       string
-	strs      string
+	strs      []string
 	col       Column
 	cols      []Column
 	LastToken int
@@ -560,7 +560,7 @@ yydefault:
 		yyDollar = yyS[yypt-8 : yypt+1]
 		//line src/parser/spanner.go.y:62
 		{
-			SetCreateTableStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str, yyDollar[5].cols, yyDollar[7].str)
+			SetCreateTableStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str, yyDollar[5].cols, yyDollar[7].strs)
 		}
 	case 5:
 		yyDollar = yyS[yypt-0 : yypt+1]
@@ -591,7 +591,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line src/parser/spanner.go.y:89
 		{
-			yyVAL.str = yyDollar[4].strs
+			yyVAL.strs = yyDollar[4].strs
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -628,43 +628,43 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:134
 		{
-			yyVAL.str = yyDollar[1].bytes
+			yyVAL.str = yyDollar[1].str
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:138
 		{
-			yyVAL.str = yyDollar[1].bytes
+			yyVAL.str = yyDollar[1].str
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:142
 		{
-			yyVAL.str = yyDollar[1].bytes
+			yyVAL.str = yyDollar[1].str
 		}
 	case 24:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line src/parser/spanner.go.y:146
 		{
-			yyVAL.str = yyDollar[1].bytes + "(" + yyDollar[3].str + ")"
+			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 25:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line src/parser/spanner.go.y:150
 		{
-			yyVAL.str = yyDollar[1].bytes + "(" + yyDollar[3].str + ")"
+			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:154
 		{
-			yyVAL.str = yyDollar[1].bytes
+			yyVAL.str = yyDollar[1].str
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:158
 		{
-			yyVAL.str = yyDollar[1].bytes
+			yyVAL.str = yyDollar[1].str
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -682,7 +682,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line src/parser/spanner.go.y:174
 		{
-			yyVAL.str = yyDollar[1].bytes + "(" + yyDollar[3].str + ")"
+			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]

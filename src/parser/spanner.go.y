@@ -6,24 +6,24 @@ package parser
   empty     struct{}
   bytes     []byte
   str       string
-  strs      string
+  strs      []string
   col       Column
   cols      []Column
   LastToken int
 }
 
-%token<bytes> PRIMARY KEY ASC DESC
-%token<bytes> INTERLEAVE IN PARENT
-%token<bytes> ARRAY OPTIONS
-%token<bytes> NOT NULL
-%token<bytes> ON DELETE CASCADE NO ACTION
-%token<bytes> MAX
-%token<bytes> true null allow_commit_timestamp
+%token<str> PRIMARY KEY ASC DESC
+%token<str> INTERLEAVE IN PARENT
+%token<str> ARRAY OPTIONS
+%token<str> NOT NULL
+%token<str> ON DELETE CASCADE NO ACTION
+%token<str> MAX
+%token<str> true null allow_commit_timestamp
 %token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
 
-%token<bytes> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
+%token<str> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
 
 // %type<statement> create_database create_table
 
@@ -37,7 +37,7 @@ package parser
 %type<str> column_type scalar_type array_type length int64_value
 %token<str> decimal_value hex_value
 
-%type<str> primary_key
+%type<strs> primary_key
 %type<str> key_part
 %type<strs> key_part_opt
 
