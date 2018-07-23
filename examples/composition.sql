@@ -7,3 +7,5 @@ CREATE TABLE Singers (
   SingerInfo BYTES(MAX),
   BirthDate  DATE,
 ) PRIMARY KEY (SingerId);
+
+CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle);
