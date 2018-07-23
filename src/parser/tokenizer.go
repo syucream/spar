@@ -35,8 +35,6 @@ var keywords = map[string]int{
 	"NO":         NO,
 	"ACTION":     ACTION,
 	"MAX":        MAX,
-	"true":       true,
-	"null":       null,
 	"allow_commit_timestamp": allow_commit_timestamp,
 	"BOOL":          BOOL,
 	"INT64":         INT64,

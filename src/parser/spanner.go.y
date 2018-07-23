@@ -4,6 +4,7 @@ package parser
 
 %union {
   empty     struct{}
+  boolean   bool
   str       string
   strs      []string
   col       Column
@@ -19,7 +20,7 @@ package parser
 %token<str> NOT NULL
 %token<str> ON DELETE CASCADE NO ACTION
 %token<str> MAX UNIQUE NULL_FILTERED STORING
-%token<str> true null allow_commit_timestamp
+%token<str> allow_commit_timestamp
 %token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
@@ -39,6 +40,9 @@ package parser
 %type<key> key_part
 %type<keys> key_part_list
 %type<keys> primary_key
+
+%type<boolean> unique_opt
+%type<boolean> null_filtered_opt
 
 %start statements
 
@@ -87,7 +91,7 @@ column_def_list:
   }
 
 column_def:
-  column_name column_type null_opt options_def
+  column_name column_type not_null_opt options_def
   {
     $$ = Column{Name: $1, Type: $2}
   }
@@ -194,10 +198,12 @@ array_type:
 
 options_def:
   /* empty */
+  /* TODO handle 'true'
   | OPTIONS '(' allow_commit_timestamp '=' true ')'
   | OPTIONS '(' allow_commit_timestamp '=' null ')'
+  */
 
-null_opt:
+not_null_opt:
   /* empty */
   | NOT NULL
   
@@ -208,14 +214,30 @@ cluster_on_delete:
 
 create_index:
   CREATE unique_opt null_filtered_opt INDEX index_name ON table_name '(' key_part_list ')' storing_clause_opt interleave_clause_list
+  {
+    // TODO Support storing_clause_opt, interleave_clause_list
+    SetCreateIndexStatement(yylex, $1, $4, $5, $2, $3, $7, $9)
+  }
 
 unique_opt:
   /* empty */
+  {
+    $$ = false
+  }
   | UNIQUE
+  {
+    $$ = true
+  }
 
 null_filtered_opt:
   /* empty */
+  {
+    $$ = false
+  }
   | NULL_FILTERED
+  {
+    $$ = true
+  }
 
 storing_clause_opt:
   /* empty */

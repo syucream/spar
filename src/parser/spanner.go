@@ -9,6 +9,7 @@ import __yyfmt__ "fmt"
 type yySymType struct {
 	yys       int
 	empty     struct{}
+	boolean   bool
 	str       string
 	strs      []string
 	col       Column
@@ -38,28 +39,26 @@ const MAX = 57362
 const UNIQUE = 57363
 const NULL_FILTERED = 57364
 const STORING = 57365
-const true = 57366
-const null = 57367
-const allow_commit_timestamp = 57368
-const CREATE = 57369
-const ALTER = 57370
-const DROP = 57371
-const DATABASE = 57372
-const TABLE = 57373
-const INDEX = 57374
-const BOOL = 57375
-const INT64 = 57376
-const FLOAT64 = 57377
-const STRING = 57378
-const BYTES = 57379
-const DATE = 57380
-const TIMESTAMP = 57381
-const database_id = 57382
-const table_name = 57383
-const column_name = 57384
-const index_name = 57385
-const decimal_value = 57386
-const hex_value = 57387
+const allow_commit_timestamp = 57366
+const CREATE = 57367
+const ALTER = 57368
+const DROP = 57369
+const DATABASE = 57370
+const TABLE = 57371
+const INDEX = 57372
+const BOOL = 57373
+const INT64 = 57374
+const FLOAT64 = 57375
+const STRING = 57376
+const BYTES = 57377
+const DATE = 57378
+const TIMESTAMP = 57379
+const database_id = 57380
+const table_name = 57381
+const column_name = 57382
+const index_name = 57383
+const decimal_value = 57384
+const hex_value = 57385
 
 var yyToknames = [...]string{
 	"$end",
@@ -85,8 +84,6 @@ var yyToknames = [...]string{
 	"UNIQUE",
 	"NULL_FILTERED",
 	"STORING",
-	"true",
-	"null",
 	"allow_commit_timestamp",
 	"'('",
 	"','",
@@ -113,7 +110,6 @@ var yyToknames = [...]string{
 	"hex_value",
 	"'<'",
 	"'>'",
-	"'='",
 }
 var yyStatenames = [...]string{}
 
@@ -130,88 +126,87 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 117
+const yyLast = 109
 
 var yyAct = [...]int{
 
-	92, 70, 69, 82, 68, 57, 46, 24, 28, 37,
-	30, 31, 32, 33, 34, 35, 36, 109, 101, 55,
-	71, 23, 105, 80, 47, 16, 15, 20, 6, 14,
-	107, 106, 97, 58, 59, 30, 31, 32, 33, 34,
-	35, 36, 11, 12, 75, 81, 75, 76, 21, 10,
-	9, 8, 96, 67, 66, 61, 25, 98, 26, 94,
-	65, 64, 62, 45, 44, 60, 19, 73, 89, 90,
-	86, 74, 18, 108, 95, 41, 54, 83, 102, 103,
-	88, 38, 43, 53, 72, 99, 63, 93, 78, 79,
-	51, 50, 40, 2, 100, 7, 85, 91, 84, 104,
-	17, 13, 87, 49, 52, 42, 48, 5, 4, 3,
-	1, 39, 77, 56, 29, 27, 22,
+	86, 68, 67, 66, 56, 46, 28, 24, 37, 30,
+	31, 32, 33, 34, 35, 36, 54, 101, 6, 93,
+	69, 23, 97, 77, 47, 16, 20, 15, 14, 10,
+	57, 58, 30, 31, 32, 33, 34, 35, 36, 11,
+	12, 99, 98, 72, 78, 72, 73, 88, 9, 8,
+	65, 64, 25, 60, 21, 90, 26, 63, 61, 45,
+	44, 19, 59, 82, 18, 100, 71, 94, 95, 89,
+	84, 38, 53, 43, 79, 70, 91, 62, 87, 75,
+	76, 41, 50, 51, 40, 2, 92, 7, 81, 85,
+	80, 96, 83, 49, 52, 42, 48, 5, 4, 3,
+	1, 17, 13, 39, 74, 55, 29, 27, 22,
 }
 var yyPact = [...]int{
 
-	-3, -3, -1000, 21, 20, 19, 8, -1000, -1000, -1000,
-	-1000, -18, -20, 50, -1000, -1000, 39, -9, -1000, -25,
-	-40, 27, 30, -2, 66, 88, -25, 69, -1000, -1000,
-	-1000, -1000, -1000, 37, 36, -1000, -1000, -44, -21, 83,
-	85, -1000, 71, 62, -15, -15, -27, 35, -1000, -1000,
-	77, 34, -1000, 33, -1000, 25, -1000, -1000, -1000, -1000,
-	24, -47, -26, 74, -26, 45, -1000, -1000, -1000, 18,
-	-1000, 82, -22, 16, -49, -26, 47, -1000, -1000, -1000,
-	65, -1000, 44, -1000, 79, -1000, 32, -1000, 58, 23,
-	3, 29, -1000, 76, -28, 61, -1000, -1000, 79, -23,
-	2, -1000, -1000, 54, -1000, -1000, -1000, -29, -1000, -1000,
+	-11, -11, -1000, 21, 20, 1, 7, -1000, -1000, -1000,
+	-1000, -15, -18, 42, -1000, -1000, 36, -8, -1000, -23,
+	-38, 25, 30, -3, 56, 80, -23, 60, -1000, -1000,
+	-1000, -1000, -1000, 35, 34, -1000, -1000, -43, -19, 74,
+	78, -1000, -1000, 58, -16, -16, -26, 33, -1000, -1000,
+	68, 32, -1000, -1000, 24, -1000, -1000, -1000, -1000, 23,
+	-46, -24, 65, -24, -1000, -1000, -1000, 19, -1000, 73,
+	-20, 17, -24, 40, -1000, -1000, -1000, 55, -1000, -1000,
+	70, -1000, 22, -1000, 53, 29, -1000, 67, -25, 50,
+	70, -21, 15, -1000, -1000, 46, -1000, -1000, -1000, -27,
+	-1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 116, 48, 115, 8, 114, 19, 113, 112, 1,
-	2, 111, 110, 93, 109, 108, 107, 106, 105, 104,
-	103, 102, 101, 100, 98, 97, 96, 94, 0,
+	0, 108, 54, 107, 6, 106, 16, 105, 104, 1,
+	2, 103, 102, 101, 100, 85, 99, 98, 97, 96,
+	95, 94, 93, 92, 90, 89, 88, 86, 0,
 }
 var yyR1 = [...]int{
 
-	0, 12, 12, 13, 13, 13, 14, 15, 2, 2,
-	2, 1, 11, 10, 10, 9, 8, 8, 8, 17,
-	17, 20, 3, 3, 4, 4, 4, 4, 4, 4,
-	4, 6, 6, 5, 19, 19, 19, 18, 18, 21,
-	21, 21, 16, 22, 22, 23, 23, 24, 24, 26,
-	27, 27, 25, 25, 25, 28, 7, 7,
+	0, 14, 14, 15, 15, 15, 16, 17, 2, 2,
+	2, 1, 11, 10, 10, 9, 8, 8, 8, 19,
+	19, 22, 3, 3, 4, 4, 4, 4, 4, 4,
+	4, 6, 6, 5, 21, 20, 20, 23, 23, 23,
+	18, 12, 12, 13, 13, 24, 24, 26, 27, 27,
+	25, 25, 25, 28, 7, 7,
 }
 var yyR2 = [...]int{
 
 	0, 1, 2, 2, 2, 2, 3, 8, 0, 1,
 	3, 4, 5, 1, 3, 2, 0, 1, 1, 0,
 	1, 5, 1, 1, 1, 1, 1, 4, 4, 1,
-	1, 1, 1, 4, 0, 6, 6, 0, 2, 0,
-	3, 4, 12, 0, 1, 0, 1, 0, 1, 4,
-	1, 3, 0, 1, 3, 3, 1, 1,
+	1, 1, 1, 4, 0, 0, 2, 0, 3, 4,
+	12, 0, 1, 0, 1, 0, 1, 4, 1, 3,
+	0, 1, 3, 3, 1, 1,
 }
 var yyChk = [...]int{
 
-	-1000, -12, -13, -14, -15, -16, 31, -13, 30, 30,
-	30, 34, 35, -22, 21, 44, 45, -23, 22, 27,
-	36, -2, -1, 46, 47, 29, 28, -3, -4, -5,
-	37, 38, 39, 40, 41, 42, 43, 11, 15, -11,
-	4, -2, -18, 13, 27, 27, 50, 45, -17, -20,
-	8, 5, -19, 12, 14, -6, -7, 20, 48, 49,
-	-6, -4, 27, 9, 27, 27, 29, 29, 51, -10,
-	-9, 46, 10, -10, 26, 28, 29, -8, 6, 7,
-	45, 29, 52, -9, -24, -26, 23, -21, 15, 24,
-	25, -25, -28, 8, 27, 16, 29, 29, 28, 9,
-	-27, 46, 17, 18, -28, 45, 29, 28, 19, 46,
+	-1000, -14, -15, -16, -17, -18, 29, -15, 28, 28,
+	28, 32, 33, -12, 21, 42, 43, -13, 22, 25,
+	34, -2, -1, 44, 45, 27, 26, -3, -4, -5,
+	35, 36, 37, 38, 39, 40, 41, 11, 15, -11,
+	4, -2, -20, 13, 25, 25, 48, 43, -19, -22,
+	8, 5, -21, 14, -6, -7, 20, 46, 47, -6,
+	-4, 25, 9, 25, 27, 27, 49, -10, -9, 44,
+	10, -10, 26, 27, -8, 6, 7, 43, 27, -9,
+	-24, -26, 23, -23, 15, -25, -28, 8, 25, 16,
+	26, 9, -27, 44, 17, 18, -28, 43, 27, 26,
+	19, 44,
 }
 var yyDef = [...]int{
 
-	0, -2, 1, 0, 0, 0, 43, 2, 3, 4,
-	5, 0, 0, 45, 44, 6, 0, 0, 46, 8,
-	0, 0, 9, 0, 0, 0, 8, 37, 22, 23,
+	0, -2, 1, 0, 0, 0, 41, 2, 3, 4,
+	5, 0, 0, 43, 42, 6, 0, 0, 44, 8,
+	0, 0, 9, 0, 0, 0, 8, 35, 22, 23,
 	24, 25, 26, 0, 0, 29, 30, 0, 0, 19,
 	0, 10, 34, 0, 0, 0, 0, 0, 7, 20,
-	0, 0, 11, 0, 38, 0, 31, 32, 56, 57,
-	0, 0, 0, 0, 0, 0, 27, 28, 33, 0,
-	13, 16, 0, 0, 0, 0, 47, 15, 17, 18,
-	39, 12, 0, 14, 52, 48, 0, 21, 0, 0,
-	0, 42, 53, 0, 0, 0, 35, 36, 0, 0,
-	0, 50, 40, 0, 54, 55, 49, 0, 41, 51,
+	0, 0, 11, 36, 0, 31, 32, 54, 55, 0,
+	0, 0, 0, 0, 27, 28, 33, 0, 13, 16,
+	0, 0, 0, 45, 15, 17, 18, 37, 12, 14,
+	50, 46, 0, 21, 0, 40, 51, 0, 0, 0,
+	0, 0, 0, 48, 38, 0, 52, 53, 47, 0,
+	39, 49,
 }
 var yyTok1 = [...]int{
 
@@ -219,17 +214,17 @@ var yyTok1 = [...]int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	27, 29, 3, 3, 28, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 30,
-	50, 52, 51,
+	25, 27, 3, 3, 26, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 28,
+	48, 3, 49,
 }
 var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-	22, 23, 24, 25, 26, 31, 32, 33, 34, 35,
+	22, 23, 24, 29, 30, 31, 32, 33, 34, 35,
 	36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
-	46, 47, 48, 49,
+	46, 47,
 }
 var yyTok3 = [...]int{
 	0,
@@ -574,165 +569,196 @@ yydefault:
 
 	case 6:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:64
+		//line src/parser/spanner.go.y:68
 		{
 			SetCreateDatabaseStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str)
 		}
 	case 7:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line src/parser/spanner.go.y:70
+		//line src/parser/spanner.go.y:74
 		{
 			SetCreateTableStatement(yylex, yyDollar[1].str, yyDollar[2].str, yyDollar[3].str, yyDollar[5].cols, yyDollar[7].keys)
 		}
 	case 8:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:76
+		//line src/parser/spanner.go.y:80
 		{
 			yyVAL.cols = make([]Column, 0, 0)
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:80
+		//line src/parser/spanner.go.y:84
 		{
 			yyVAL.cols = make([]Column, 0, 1)
 			yyVAL.cols = append(yyVAL.cols, yyDollar[1].col)
 		}
 	case 10:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:85
+		//line src/parser/spanner.go.y:89
 		{
 			yyVAL.cols = append(yyDollar[3].cols, yyDollar[1].col)
 		}
 	case 11:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:91
+		//line src/parser/spanner.go.y:95
 		{
 			yyVAL.col = Column{Name: yyDollar[1].str, Type: yyDollar[2].str}
 		}
 	case 12:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line src/parser/spanner.go.y:97
+		//line src/parser/spanner.go.y:101
 		{
 			yyVAL.keys = yyDollar[4].keys
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:103
+		//line src/parser/spanner.go.y:107
 		{
 			yyVAL.keys = make([]Key, 0, 1)
 			yyVAL.keys = append(yyVAL.keys, yyDollar[1].key)
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:108
+		//line src/parser/spanner.go.y:112
 		{
 			yyVAL.keys = append(yyDollar[1].keys, yyDollar[3].key)
 		}
 	case 15:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line src/parser/spanner.go.y:114
+		//line src/parser/spanner.go.y:118
 		{
 			yyVAL.key = Key{Name: yyDollar[1].str, Order: yyDollar[2].str}
 		}
 	case 16:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:120
+		//line src/parser/spanner.go.y:124
 		{
 			yyVAL.str = "ASC"
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:124
+		//line src/parser/spanner.go.y:128
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:128
+		//line src/parser/spanner.go.y:132
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:141
+		//line src/parser/spanner.go.y:145
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:145
+		//line src/parser/spanner.go.y:149
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:151
+		//line src/parser/spanner.go.y:155
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:155
+		//line src/parser/spanner.go.y:159
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:159
+		//line src/parser/spanner.go.y:163
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 27:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:163
+		//line src/parser/spanner.go.y:167
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 28:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:167
+		//line src/parser/spanner.go.y:171
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:171
+		//line src/parser/spanner.go.y:175
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:175
+		//line src/parser/spanner.go.y:179
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:181
+		//line src/parser/spanner.go.y:185
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:185
+		//line src/parser/spanner.go.y:189
 		{
 			yyVAL.str = "2621440"
 		}
 	case 33:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line src/parser/spanner.go.y:191
+		//line src/parser/spanner.go.y:195
 		{
 			yyVAL.str = yyDollar[1].str + "(" + yyDollar[3].str + ")"
 		}
-	case 56:
+	case 40:
+		yyDollar = yyS[yypt-12 : yypt+1]
+		//line src/parser/spanner.go.y:217
+		{
+			// TODO Support storing_clause_opt, interleave_clause_list
+			SetCreateIndexStatement(yylex, yyDollar[1].str, yyDollar[4].str, yyDollar[5].str, yyDollar[2].boolean, yyDollar[3].boolean, yyDollar[7].str, yyDollar[9].keys)
+		}
+	case 41:
+		yyDollar = yyS[yypt-0 : yypt+1]
+		//line src/parser/spanner.go.y:224
+		{
+			yyVAL.boolean = false
+		}
+	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:259
+		//line src/parser/spanner.go.y:228
+		{
+			yyVAL.boolean = true
+		}
+	case 43:
+		yyDollar = yyS[yypt-0 : yypt+1]
+		//line src/parser/spanner.go.y:234
+		{
+			yyVAL.boolean = false
+		}
+	case 44:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line src/parser/spanner.go.y:238
+		{
+			yyVAL.boolean = true
+		}
+	case 54:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line src/parser/spanner.go.y:281
 		{
 			yyVAL.str = yyDollar[1].str
 		}
-	case 57:
+	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:263
+		//line src/parser/spanner.go.y:285
 		{
 			yyVAL.str = yyDollar[1].str
 		}

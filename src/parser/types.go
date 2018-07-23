@@ -37,8 +37,10 @@ type CreateTableStatement struct {
 type CreateIndexStatement struct {
 	Statement
 
-	TableName string
-	Keys      []Key
+	Unique       bool
+	NullFiltered bool
+	TableName    string
+	Keys         []Key
 }
 
 func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
@@ -65,7 +67,7 @@ func SetCreateTableStatement(yylex interface{}, action string, target string, id
 	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
 }
 
-func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, tableName string, keys []Key) {
+func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, unique bool, nullFiltered bool, tableName string, keys []Key) {
 	s := CreateIndexStatement{
 		Statement: Statement{
 			Action: action,
