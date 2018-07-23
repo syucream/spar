@@ -73,6 +73,7 @@ create_database:
 create_table:
   CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_opt
   {
+    // TODO support cluster_opt
     SetCreateTableStatement(yylex, $1, $2, $3, $5, $7)
   }
 
@@ -293,7 +294,7 @@ int64_value:
     $$ = $1
   }
 
-/*
+/* TODO Check some literals satisfy regexp specs on tokenizer.
 decimal_value:
   [-]0—9+
 

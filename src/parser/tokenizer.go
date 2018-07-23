@@ -60,6 +60,8 @@ var symbols = map[string]int{
 
 type KeywordTokenizer struct{}
 
+// FromStrLit tokenize lit to a token pre-defined by goyacc with last token as a hint.
+// TODO Check some literals satisfy regexp specs.
 func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 	tokVal := 0
 
