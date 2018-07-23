@@ -7,10 +7,8 @@ package parser
   bytes     []byte
   str       string
   strs      string
-
   col       Column
   cols      []Column
-
   LastToken int
 }
 
@@ -27,21 +25,21 @@ package parser
 
 %token<bytes> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
 
-%type<statement> create_database
+// %type<statement> create_database create_table
 
 %token<str> database_id
 %token<str> table_name
 %token<str> column_name
 %token<indexName> index_name
 
-%token<col> column_def
-%token<cols> column_def_opt
-%token<str> column_type scalar_type array_type length
+%type<col> column_def
+%type<cols> column_def_opt
+%type<str> column_type scalar_type array_type length int64_value
 %token<str> decimal_value hex_value
 
-%token<str> primary_key
-%token<str> key_part
-%token<strs> key_part_opt
+%type<str> primary_key
+%type<str> key_part
+%type<strs> key_part_opt
 
 %start statement
 
@@ -77,7 +75,7 @@ column_def_opt:
   }
   | column_def_opt ',' column_def
   {
-    $$ = append($3, $1)
+    $$ = append($1, $3)
   }
 
 column_def:
@@ -221,7 +219,13 @@ drop_index:
 
 int64_value:
     decimal_value
+  {
+    $$ = $1
+  }
   | hex_value
+  {
+    $$ = $1
+  }
 
 /*
 decimal_value:
