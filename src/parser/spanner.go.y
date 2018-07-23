@@ -41,6 +41,7 @@ package parser
 %type<keys> key_part_list
 %type<keys> primary_key
 
+%type<boolean> not_null_opt
 %type<boolean> unique_opt
 %type<boolean> null_filtered_opt
 
@@ -93,7 +94,7 @@ column_def_list:
 column_def:
   column_name column_type not_null_opt options_def
   {
-    $$ = Column{Name: $1, Type: $2}
+    $$ = Column{Name: $1, Type: $2, NotNull: $3}
   }
 
 primary_key:
@@ -205,7 +206,13 @@ options_def:
 
 not_null_opt:
   /* empty */
+  {
+    $$ = false
+  }
   | NOT NULL
+  {
+    $$ = true
+  }
   
 cluster_on_delete:
   /* empty */
