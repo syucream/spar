@@ -4,7 +4,6 @@ package parser
 
 %union {
   empty     struct{}
-  bytes     []byte
   str       string
   strs      []string
   col       Column
@@ -17,7 +16,7 @@ package parser
 %token<str> ARRAY OPTIONS
 %token<str> NOT NULL
 %token<str> ON DELETE CASCADE NO ACTION
-%token<str> MAX
+%token<str> MAX UNIQUE NULL_FILTERED STORING
 %token<str> true null allow_commit_timestamp
 %token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
@@ -50,7 +49,8 @@ statements:
 statement:
     create_database ';'
   | create_table ';'
-/* TODO  { create_index | alter_table | drop_table | drop_index } */
+  | create_index ';'
+/* TODO  { alter_table | drop_table | drop_index } */
 
 create_database:
   CREATE DATABASE database_id
@@ -190,17 +190,36 @@ cluster_on_delete:
   | ON DELETE CASCADE
   | ON DELETE NO ACTION
 
-/*
 create_index:
-    CREATE [UNIQUE] [NULL_FILTERED] INDEX index_name
-    ON table_name ( key_part [, ...] ) [ storing_clause ] [ , interleave_clause ]
+  CREATE unique_opt null_filtered_opt INDEX index_name ON table_name '(' key_part_list ')' storing_clause_opt interleave_clause_list
+
+unique_opt:
+  /* empty */
+  | UNIQUE
+
+null_filtered_opt:
+  /* empty */
+  | NULL_FILTERED
+
+storing_clause_opt:
+  /* empty */
+  | storing_clause
 
 storing_clause:
-    STORING ( column_name [, ...] )
+    STORING '(' column_name_list ')'
+
+column_name_list:
+    column_name
+  | column_name_list ',' column_name
+
+interleave_clause_list:
+    interleave_clause
+  | interleave_clause_list ',' interleave_clause
 
 interleave_clause:
     INTERLEAVE IN table_name
 
+/*
 alter_table:
     ALTER TABLE table_name { table_alteration | table_column_alteration }
 
