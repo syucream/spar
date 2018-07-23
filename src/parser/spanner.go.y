@@ -30,13 +30,13 @@ package parser
 %token<indexName> index_name
 
 %type<col> column_def
-%type<cols> column_def_opt
+%type<cols> column_def_list
 %type<str> column_type scalar_type array_type length int64_value
 %token<str> decimal_value hex_value
 
 %type<strs> primary_key
 %type<str> key_part
-%type<strs> key_part_opt
+%type<strs> key_part_list
 
 %start statement
 
@@ -55,12 +55,12 @@ create_database:
   }
 
 create_table:
-  CREATE TABLE table_name '(' column_def_opt ')' primary_key cluster_opt
+  CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_opt
   {
     SetCreateTableStatement(yylex, $1, $2, $3, $5, $7)
   }
 
-column_def_opt:
+column_def_list:
   /* empty */
   {
     $$ = make([]Column, 0, 0)
@@ -70,7 +70,7 @@ column_def_opt:
     $$ = make([]Column, 0, 1)
     $$ = append($$, $1)
   }
-  | column_def ',' column_def_opt
+  | column_def ',' column_def_list
   {
     $$ = append($3, $1)
   }
@@ -82,18 +82,18 @@ column_def:
   }
 
 primary_key:
-  PRIMARY KEY '(' key_part_opt ')'
+  PRIMARY KEY '(' key_part_list ')'
   {
     $$ = $4
   }
 
-key_part_opt:
+key_part_list:
     key_part
   {
     $$ = make([]string, 0, 1)
     $$ = append($$, $1)
   }
-  | key_part_opt ',' key_part
+  | key_part_list ',' key_part
   {
     $$ = append($1, $3)
   }
