@@ -19,7 +19,6 @@ func main() {
 	}
 
 	stmts := parser.Parse(strings.NewReader(string(data)))
-	fmt.Println(stmts)
 
 	mysqlStmts, err := spanner2mysql.GetMysqlCreateTables(stmts)
 	if err != nil {

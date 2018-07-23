@@ -26,7 +26,8 @@ func (l *LexerWrapper) Lex(lval *yySymType) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Print(r)
+	// To debug lexer
+	// log.Print(r)
 
 	tokVal := r.Token
 	lval.str = r.Literal
