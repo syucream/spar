@@ -8,6 +8,8 @@ package parser
   strs      []string
   col       Column
   cols      []Column
+  key       Key
+  keys      []Key
   LastToken int
 }
 
@@ -26,16 +28,17 @@ package parser
 %token<str> database_id
 %token<str> table_name
 %token<str> column_name
-%token<indexName> index_name
+%token<str> index_name
 
 %type<col> column_def
 %type<cols> column_def_list
 %type<str> column_type scalar_type array_type length int64_value
 %token<str> decimal_value hex_value
 
-%type<strs> primary_key
-%type<str> key_part
-%type<strs> key_part_list
+%type<str> key_order_opt
+%type<key> key_part
+%type<keys> key_part_list
+%type<keys> primary_key
 
 %start statements
 
@@ -50,7 +53,11 @@ statement:
     create_database ';'
   | create_table ';'
   | create_index ';'
-/* TODO  { alter_table | drop_table | drop_index } */
+  /* TODO
+  | alter_table ';'
+  | drop_table ';'
+  | drop_index ';'
+  */
 
 create_database:
   CREATE DATABASE database_id
@@ -94,7 +101,7 @@ primary_key:
 key_part_list:
     key_part
   {
-    $$ = make([]string, 0, 1)
+    $$ = make([]Key, 0, 1)
     $$ = append($$, $1)
   }
   | key_part_list ',' key_part
@@ -105,13 +112,22 @@ key_part_list:
 key_part:
   column_name key_order_opt
   {
-    $$ = $1
+    $$ = Key{Name: $1, Order: $2}
   }
 
 key_order_opt:
   /* empty */
+  {
+    $$ = "ASC"
+  }
   | ASC
+  {
+    $$ = $1
+  }
   | DESC
+  {
+    $$ = $1
+  }
 
 cluster_opt:
   /* empty */

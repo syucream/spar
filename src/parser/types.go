@@ -3,6 +3,7 @@ package parser
 type DDStatements struct {
 	CreateDatabases []CreateDatabaseStatement
 	CreateTables    []CreateTableStatement
+	CreateIndexes   []CreateIndexStatement
 }
 
 type Statement struct {
@@ -17,8 +18,27 @@ type Column struct {
 	NotNull bool
 }
 
+type Key struct {
+	Name  string
+	Order string
+}
+
 type CreateDatabaseStatement struct {
 	Statement
+}
+
+type CreateTableStatement struct {
+	Statement
+
+	Columns     []Column
+	PrimaryKeys []Key
+}
+
+type CreateIndexStatement struct {
+	Statement
+
+	TableName string
+	Keys      []Key
 }
 
 func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
@@ -32,14 +52,7 @@ func SetCreateDatabaseStatement(yylex interface{}, action string, target string,
 	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
 }
 
-type CreateTableStatement struct {
-	Statement
-
-	Columns     []Column
-	PrimaryKeys []string
-}
-
-func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Column, pks []string) {
+func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Column, keys []Key) {
 	s := CreateTableStatement{
 		Statement: Statement{
 			Action: action,
@@ -47,7 +60,20 @@ func SetCreateTableStatement(yylex interface{}, action string, target string, id
 			Id:     id,
 		},
 		Columns:     cols,
-		PrimaryKeys: pks,
+		PrimaryKeys: keys,
 	}
 	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
+}
+
+func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, tableName string, keys []Key) {
+	s := CreateIndexStatement{
+		Statement: Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
+		TableName: tableName,
+		Keys:      keys,
+	}
+	yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
 }
