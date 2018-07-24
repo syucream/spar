@@ -11,6 +11,8 @@ package parser
   cols      []Column
   key       Key
   keys      []Key
+  clstr     Cluster
+  clstrs    []Cluster
   LastToken int
 }
 
@@ -40,6 +42,10 @@ package parser
 %type<key> key_part
 %type<keys> key_part_list
 %type<keys> primary_key
+
+%type<clstrs> cluster_list
+%type<clstr> cluster
+%type<str> cluster_on_delete
 
 %type<boolean> not_null_opt
 %type<boolean> unique_opt
@@ -71,10 +77,9 @@ create_database:
   }
 
 create_table:
-  CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_opt
+  CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_list
   {
-    // TODO support cluster_opt
-    SetCreateTableStatement(yylex, $1, $2, $3, $5, $7)
+    SetCreateTableStatement(yylex, $1, $2, $3, $5, $7, $8)
   }
 
 column_def_list:
@@ -135,12 +140,41 @@ key_order_opt:
     $$ = $1
   }
 
-cluster_opt:
+cluster_list:
   /* empty */
+  {
+    $$ = make([]Cluster, 0, 0)
+  }
   | cluster
+  {
+    $$ = make([]Cluster, 0, 1)
+    $$ = append($$, $1)
+  }
+  | cluster_list ',' cluster
+  {
+    $$ = append($1, $3)
+  }
 
 cluster:
     INTERLEAVE IN PARENT table_name cluster_on_delete
+  {
+    $$ = Cluster{TableName: $4, OnDelete: $5}
+  }
+
+cluster_on_delete:
+  /* empty */
+  {
+    // default
+    $$ = "NO ACTION"
+  }
+  | ON DELETE CASCADE
+  {
+    $$ = $3
+  }
+  | ON DELETE NO ACTION
+  {
+    $$ = $3 + " " + $4
+  }
 
 column_type:
     scalar_type
@@ -215,11 +249,6 @@ not_null_opt:
     $$ = true
   }
   
-cluster_on_delete:
-  /* empty */
-  | ON DELETE CASCADE
-  | ON DELETE NO ACTION
-
 create_index:
   CREATE unique_opt null_filtered_opt INDEX index_name ON table_name '(' key_part_list ')' storing_clause_opt interleave_clause_list
   {
