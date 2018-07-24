@@ -7,13 +7,13 @@ spanner.go:
 	goyacc -o src/parser/spanner.go src/parser/spanner.go.y
 
 build: spanner.go
-	go build cmd/jack/jack.go
+	go build cmd/jackup/jackup.go
 
 check-cli: build
-	./jack examples/create_database.sql
-	./jack examples/create_table.sql
-	./jack examples/create_index.sql
-	./jack examples/composition.sql
+	./jackup examples/create_database.sql
+	./jackup examples/create_table.sql
+	./jackup examples/create_index.sql
+	./jackup examples/composition.sql
 
 # Set GITHUB_TOKEN personal access token and create release git tag
 .PHONY: release

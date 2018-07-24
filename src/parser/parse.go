@@ -3,7 +3,7 @@ package parser
 import (
 	"io"
 
-	"github.com/syucream/jack/src/lexer"
+	"github.com/syucream/jackup/src/lexer"
 )
 
 func Parse(r io.Reader) DDStatements {

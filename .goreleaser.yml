@@ -1,6 +1,6 @@
 builds:
-  - main: cmd/jack/jack.go
-    binary: jack
+  - main: cmd/jackup/jackup.go
+    binary: jackup
     goos:
       - windows
       - darwin

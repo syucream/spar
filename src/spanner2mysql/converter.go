@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/syucream/jack/src/parser"
+	"github.com/syucream/jackup/src/parser"
 )
 
 var toMysqlType = map[string]string{
