@@ -7,15 +7,24 @@ import (
 	"github.com/syucream/jackup/src/parser"
 )
 
-var toMysqlType = map[string]string{
-	"BOOL":      "TINYINT(1)",
-	"INT64":     "BIGINT",
-	"FLOAT64":   "DOUBLE",
-	"STRING":    "VARCHAR",
-	"BYTES":     "BLOB",
-	"DATE":      "DATE",
-	"TIMESTAMP": "TIMESTAMP",
-}
+// MySQL requires fixed size index
+const pseudoKeyLength = 255
+
+var (
+	invalidInterleaveErr = fmt.Errorf("Invalid interleave")
+	invalidSpannerErr    = fmt.Errorf("Invalid spanner type")
+	invalidKeyErr        = fmt.Errorf("Invalid key")
+
+	toMysqlType = map[string]string{
+		"BOOL":      "TINYINT(1)",
+		"INT64":     "BIGINT",
+		"FLOAT64":   "DOUBLE",
+		"STRING":    "VARCHAR",
+		"BYTES":     "BLOB",
+		"DATE":      "DATE",
+		"TIMESTAMP": "TIMESTAMP",
+	}
+)
 
 func getMysqlType(t string) (string, error) {
 	origType := t
@@ -40,13 +49,57 @@ func getMysqlType(t string) (string, error) {
 			}
 		}
 	} else {
-		return "", fmt.Errorf("Invalid type: %s\n", origType)
+		return "", invalidSpannerErr
 	}
 
 	return convertedType, nil
 }
 
+func getColumns(ct parser.CreateTableStatement) ([]string, error) {
+	var cols []string
+
+	for _, col := range ct.Columns {
+		convertedType, err := getMysqlType(col.Type)
+		if err != nil {
+			return []string{}, err
+		}
+
+		cols = append(cols, fmt.Sprintf("  %s %s %s", col.Name, convertedType, col.Nullability))
+	}
+
+	return cols, nil
+}
+
+func getPrimaryKey(ct parser.CreateTableStatement) (string, error) {
+	expectedLen := len(ct.PrimaryKeys)
+	keyNames := make([]string, 0, expectedLen)
+
+	for _, pk := range ct.PrimaryKeys {
+		for _, col := range ct.Columns {
+			if col.Name == pk.Name {
+				kn := pk.Name
+				mysqlType, err := getMysqlType(col.Type)
+				if err == nil && mysqlType == "TEXT" || mysqlType == "BLOB" {
+					kn += fmt.Sprintf("(%d)", pseudoKeyLength)
+				}
+				keyNames = append(keyNames, kn)
+			}
+		}
+	}
+
+	if expectedLen == len(keyNames) {
+		return fmt.Sprintf("  PRIMARY KEY (%s)", strings.Join(keyNames, ", ")), nil
+	} else {
+		return "", invalidKeyErr
+	}
+}
+
 func getRelation(child parser.CreateTableStatement, maybeParents []parser.CreateTableStatement) (string, error) {
+	// no relation
+	if child.Cluster.TableName == "" {
+		return "", nil
+	}
+
 	var parent *parser.CreateTableStatement
 	for _, s := range maybeParents {
 		if child.Cluster.TableName == s.Id {
@@ -56,7 +109,7 @@ func getRelation(child parser.CreateTableStatement, maybeParents []parser.Create
 	}
 
 	if parent == nil {
-		return "", fmt.Errorf("Invalid interleave: %v\n", child.Cluster)
+		return "", invalidInterleaveErr
 	}
 
 	var keyCol *parser.Column
@@ -70,7 +123,7 @@ func getRelation(child parser.CreateTableStatement, maybeParents []parser.Create
 	}
 
 	if keyCol == nil {
-		return "", fmt.Errorf("Invalid interleave: %v\n", child.Cluster)
+		return "", invalidInterleaveErr
 	}
 
 	return fmt.Sprintf("  FOREIGN KEY (%s) REFERENCES %s(%s)", keyCol.Name, parent.Id, keyCol.Name), nil
@@ -82,28 +135,23 @@ func GetMysqlCreateTables(statements parser.DDStatements) (string, error) {
 	for _, ct := range statements.CreateTables {
 		converted += fmt.Sprintf("CREATE TABLE %s (\n", ct.Statement.Id)
 
-		var defs []string
-		for _, col := range ct.Columns {
-			convertedType, err := getMysqlType(col.Type)
-			if err != nil {
-				return "", err
-			}
-
-			defs = append(defs, fmt.Sprintf("  %s %s %s", col.Name, convertedType, col.Nullability))
+		defs, err := getColumns(ct)
+		if err != nil {
+			return "", err
 		}
 
-		keyNames := make([]string, 0, len(ct.PrimaryKeys))
-		for _, pk := range ct.PrimaryKeys {
-			keyNames = append(keyNames, pk.Name)
+		pk, err := getPrimaryKey(ct)
+		if err != nil {
+			return "", err
 		}
-		defs = append(defs, fmt.Sprintf("  PRIMARY KEY (%s)", strings.Join(keyNames, ", ")))
+		defs = append(defs, pk)
 
-		if ct.Cluster.TableName != "" {
-			// Convert interleave to foreign key
-			relation, err := getRelation(ct, statements.CreateTables)
-			if err != nil {
-				return "", err
-			}
+		// Convert interleave to foreign key
+		relation, err := getRelation(ct, statements.CreateTables)
+		if err != nil {
+			return "", err
+		}
+		if relation != "" {
 			defs = append(defs, relation)
 		}
 
