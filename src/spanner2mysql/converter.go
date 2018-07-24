@@ -89,12 +89,7 @@ func GetMysqlCreateTables(statements parser.DDStatements) (string, error) {
 				return "", err
 			}
 
-			attr := "NULL"
-			if col.NotNull {
-				attr = "NOT NULL"
-			}
-
-			defs = append(defs, fmt.Sprintf("  %s %s %s", col.Name, convertedType, attr))
+			defs = append(defs, fmt.Sprintf("  %s %s %s", col.Name, convertedType, col.Nullability))
 		}
 
 		keyNames := make([]string, 0, len(ct.PrimaryKeys))

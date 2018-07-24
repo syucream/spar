@@ -13,9 +13,9 @@ type Statement struct {
 }
 
 type Column struct {
-	Name    string
-	Type    string // BOOL, INT64, ...
-	NotNull bool
+	Name        string
+	Type        string // BOOL, INT64, ...
+	Nullability string
 }
 
 type Key struct {
@@ -43,8 +43,8 @@ type CreateTableStatement struct {
 type CreateIndexStatement struct {
 	Statement
 
-	Unique       bool
-	NullFiltered bool
+	Unique       string
+	NullFiltered string
 	TableName    string
 	Keys         []Key
 }
@@ -74,7 +74,7 @@ func SetCreateTableStatement(yylex interface{}, action string, target string, id
 	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
 }
 
-func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, unique bool, nullFiltered bool, tableName string, keys []Key) {
+func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, unique string, nullFiltered string, tableName string, keys []Key) {
 	s := CreateIndexStatement{
 		Statement: Statement{
 			Action: action,

@@ -4,7 +4,6 @@ package parser
 
 %union {
   empty     struct{}
-  boolean   bool
   str       string
   strs      []string
   col       Column
@@ -21,7 +20,7 @@ package parser
 %token<str> NOT NULL
 %token<str> ON DELETE CASCADE NO ACTION
 %token<str> MAX UNIQUE NULL_FILTERED STORING
-%token<str> allow_commit_timestamp
+%token<str> true null allow_commit_timestamp
 %token<empty> '(' ',' ')' ';'
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
@@ -46,9 +45,9 @@ package parser
 %type<clstr> cluster
 %type<str> cluster_on_delete
 
-%type<boolean> not_null_opt
-%type<boolean> unique_opt
-%type<boolean> null_filtered_opt
+%type<str> not_null_opt
+%type<str> unique_opt
+%type<str> null_filtered_opt
 
 %start statements
 
@@ -99,7 +98,7 @@ column_def_list:
 column_def:
   column_name column_type not_null_opt options_def
   {
-    $$ = Column{Name: $1, Type: $2, NotNull: $3}
+    $$ = Column{Name: $1, Type: $2, Nullability: $3}
   }
 
 primary_key:
@@ -236,11 +235,11 @@ options_def:
 not_null_opt:
   /* empty */
   {
-    $$ = false
+    $$ = "NULL"
   }
   | NOT NULL
   {
-    $$ = true
+    $$ = $1 + " " + $2
   }
   
 create_index:
@@ -253,21 +252,21 @@ create_index:
 unique_opt:
   /* empty */
   {
-    $$ = false
+    $$ = ""
   }
   | UNIQUE
   {
-    $$ = true
+    $$ = $1
   }
 
 null_filtered_opt:
   /* empty */
   {
-    $$ = false
+    $$ = ""
   }
   | NULL_FILTERED
   {
-    $$ = true
+    $$ = $1
   }
 
 storing_clause_opt:
