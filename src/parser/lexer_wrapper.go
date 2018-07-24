@@ -3,7 +3,7 @@ package parser
 import (
 	"log"
 
-	"github.com/syucream/jackup/src/lexer"
+	"github.com/syucream/spar/src/lexer"
 )
 
 type LexerWrapper struct {
