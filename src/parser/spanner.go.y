@@ -21,7 +21,7 @@ package parser
 %token<str> ON DELETE CASCADE NO ACTION
 %token<str> MAX UNIQUE NULL_FILTERED STORING
 %token<str> true null allow_commit_timestamp
-%token<empty> '(' ',' ')' ';'
+%token<empty> '(' ',' ')' ';' '='
 %token<str> CREATE ALTER DROP
 %token<str> DATABASE TABLE INDEX
 %token<str> BOOL INT64 FLOAT64 STRING BYTES DATE TIMESTAMP
@@ -34,6 +34,7 @@ package parser
 %type<col> column_def
 %type<cols> column_def_list
 %type<str> column_type scalar_type array_type length int64_value
+%type<str> options_def
 %token<str> decimal_value hex_value
 
 %type<str> key_order_opt
@@ -98,7 +99,7 @@ column_def_list:
 column_def:
   column_name column_type not_null_opt options_def
   {
-    $$ = Column{Name: $1, Type: $2, Nullability: $3}
+    $$ = Column{Name: $1, Type: $2, Nullability: $3, Options: $4}
   }
 
 primary_key:
@@ -227,10 +228,17 @@ array_type:
 
 options_def:
   /* empty */
-  /* TODO handle 'true'
+  {
+    $$ = ""
+  }
   | OPTIONS '(' allow_commit_timestamp '=' true ')'
+  {
+    $$ = $3 + "=" + $5
+  }
   | OPTIONS '(' allow_commit_timestamp '=' null ')'
-  */
+  {
+    $$ = $3 + "=" + $5
+  }
 
 not_null_opt:
   /* empty */

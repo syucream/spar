@@ -16,6 +16,7 @@ type Column struct {
 	Name        string
 	Type        string // BOOL, INT64, ...
 	Nullability string
+	Options     string
 }
 
 type Key struct {
