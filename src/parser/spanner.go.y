@@ -1,16 +1,58 @@
 %{
 package parser
+
+import (
+	"github.com/syucream/spar/src/types"
+)
+
+func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
+	s := types.CreateDatabaseStatement{
+		Statement: types.Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
+	}
+	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
+}
+
+func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []types.Column, keys []types.Key, cluster types.Cluster) {
+	s := types.CreateTableStatement{
+		Statement: types.Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
+		Columns:     cols,
+		PrimaryKeys: keys,
+		Cluster:     cluster,
+	}
+	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
+}
+
+func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, unique string, nullFiltered string, tableName string, keys []types.Key) {
+	s := types.CreateIndexStatement{
+		Statement: types.Statement{
+			Action: action,
+			Target: target,
+			Id:     id,
+		},
+		TableName: tableName,
+		Keys:      keys,
+	}
+	yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
+}
 %}
 
 %union {
   empty     struct{}
   str       string
   strs      []string
-  col       Column
-  cols      []Column
-  key       Key
-  keys      []Key
-  clstr     Cluster
+  col       types.Column
+  cols      []types.Column
+  key       types.Key
+  keys      []types.Key
+  clstr     types.Cluster
   LastToken int
 }
 
@@ -84,11 +126,11 @@ create_table:
 column_def_list:
   /* empty */
   {
-    $$ = make([]Column, 0, 0)
+    $$ = make([]types.Column, 0, 0)
   }
   | column_def
   {
-    $$ = make([]Column, 0, 1)
+    $$ = make([]types.Column, 0, 1)
     $$ = append($$, $1)
   }
   | column_def ',' column_def_list
@@ -99,7 +141,7 @@ column_def_list:
 column_def:
   column_name column_type not_null_opt options_def
   {
-    $$ = Column{Name: $1, Type: $2, Nullability: $3, Options: $4}
+    $$ = types.Column{Name: $1, Type: $2, Nullability: $3, Options: $4}
   }
 
 primary_key:
@@ -111,7 +153,7 @@ primary_key:
 key_part_list:
     key_part
   {
-    $$ = make([]Key, 0, 1)
+    $$ = make([]types.Key, 0, 1)
     $$ = append($$, $1)
   }
   | key_part_list ',' key_part
@@ -122,7 +164,7 @@ key_part_list:
 key_part:
   column_name key_order_opt
   {
-    $$ = Key{Name: $1, Order: $2}
+    $$ = types.Key{Name: $1, Order: $2}
   }
 
 key_order_opt:
@@ -142,7 +184,7 @@ key_order_opt:
 cluster_opt:
   /* empty */
   {
-    $$ = Cluster{}
+    $$ = types.Cluster{}
   }
   | ',' cluster
   {
@@ -152,7 +194,7 @@ cluster_opt:
 cluster:
     INTERLEAVE IN PARENT table_name cluster_on_delete
   {
-    $$ = Cluster{TableName: $4, OnDelete: $5}
+    $$ = types.Cluster{TableName: $4, OnDelete: $5}
   }
 
 cluster_on_delete:

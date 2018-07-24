@@ -4,19 +4,20 @@ import (
 	"log"
 
 	"github.com/syucream/spar/src/lexer"
+	"github.com/syucream/spar/src/types"
 )
 
 type LexerWrapper struct {
 	impl   *lexer.LexerImpl
-	Result DDStatements
+	Result types.DDStatements
 }
 
 func NewLexerWrapper(li *lexer.LexerImpl) *LexerWrapper {
 	return &LexerWrapper{
 		impl: li,
-		Result: DDStatements{
-			CreateDatabases: []CreateDatabaseStatement{},
-			CreateTables:    []CreateTableStatement{},
+		Result: types.DDStatements{
+			CreateDatabases: []types.CreateDatabaseStatement{},
+			CreateTables:    []types.CreateTableStatement{},
 		},
 	}
 }
