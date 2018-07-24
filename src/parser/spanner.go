@@ -749,7 +749,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line src/parser/spanner.go.y:219
 		{
-			yyVAL.str = "2621440"
+			yyVAL.str = yyDollar[1].str
 		}
 	case 36:
 		yyDollar = yyS[yypt-4 : yypt+1]

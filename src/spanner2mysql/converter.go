@@ -30,9 +30,14 @@ func getMysqlType(t string) (string, error) {
 	if v, ok := toMysqlType[origType]; ok {
 		convertedType = v
 
-		// Append length attribute for VARCHAR
+		// Replace too big VARCHAR to TEXT or append length attribute for VARCHAR
+		// TODO more strict check
 		if convertedType == "VARCHAR" {
-			convertedType += t[index:]
+			if t[index:] == "(MAX)" {
+				convertedType = "TEXT"
+			} else {
+				convertedType += t[index:]
+			}
 		}
 	} else {
 		return "", fmt.Errorf("Invalid type: %s\n", origType)
