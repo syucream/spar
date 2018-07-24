@@ -1,0 +1,11 @@
+builds:
+  - main: cmd/jack/jack.go
+    binary: jack
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+archive:
+  format: tar.gz
