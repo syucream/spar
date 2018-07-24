@@ -96,7 +96,7 @@ func GetMysqlCreateTables(statements parser.DDStatements) (string, error) {
 		for _, pk := range ct.PrimaryKeys {
 			keyNames = append(keyNames, pk.Name)
 		}
-		defs = append(defs, fmt.Sprintf("  PRIMARY KEY(%s)", strings.Join(keyNames, ", ")))
+		defs = append(defs, fmt.Sprintf("  PRIMARY KEY (%s)", strings.Join(keyNames, ", ")))
 
 		if ct.Cluster.TableName != "" {
 			// Convert interleave to foreign key
