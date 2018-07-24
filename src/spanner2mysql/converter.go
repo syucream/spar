@@ -73,7 +73,7 @@ func getRelation(child parser.CreateTableStatement, maybeParents []parser.Create
 		return "", fmt.Errorf("Invalid interleave: %v\n", child.Cluster)
 	}
 
-	return fmt.Sprintf("  CONSTRAINT FOREIGN KEY %s REFERENCES %s(%s)", keyCol.Name, parent.Id, keyCol.Name), nil
+	return fmt.Sprintf("  FOREIGN KEY (%s) REFERENCES %s(%s)", keyCol.Name, parent.Id, keyCol.Name), nil
 }
 
 func GetMysqlCreateTables(statements parser.DDStatements) (string, error) {
@@ -96,9 +96,12 @@ func GetMysqlCreateTables(statements parser.DDStatements) (string, error) {
 
 			defs = append(defs, fmt.Sprintf("  %s %s %s", col.Name, convertedType, attr))
 		}
+
+		keyNames := make([]string, 0, len(ct.PrimaryKeys))
 		for _, pk := range ct.PrimaryKeys {
-			defs = append(defs, fmt.Sprintf("  PRIMARY KEY(%s)", pk.Name))
+			keyNames = append(keyNames, pk.Name)
 		}
+		defs = append(defs, fmt.Sprintf("  PRIMARY KEY(%s)", strings.Join(keyNames, ", ")))
 
 		if ct.Cluster.TableName != "" {
 			// Convert interleave to foreign key
