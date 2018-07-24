@@ -12,7 +12,6 @@ package parser
   key       Key
   keys      []Key
   clstr     Cluster
-  clstrs    []Cluster
   LastToken int
 }
 
@@ -43,7 +42,7 @@ package parser
 %type<keys> key_part_list
 %type<keys> primary_key
 
-%type<clstrs> cluster_list
+%type<clstr> cluster_opt
 %type<clstr> cluster
 %type<str> cluster_on_delete
 
@@ -77,7 +76,7 @@ create_database:
   }
 
 create_table:
-  CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_list
+  CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_opt
   {
     SetCreateTableStatement(yylex, $1, $2, $3, $5, $7, $8)
   }
@@ -140,19 +139,14 @@ key_order_opt:
     $$ = $1
   }
 
-cluster_list:
+cluster_opt:
   /* empty */
   {
-    $$ = make([]Cluster, 0, 0)
+    $$ = Cluster{}
   }
-  | cluster
+  | ',' cluster
   {
-    $$ = make([]Cluster, 0, 1)
-    $$ = append($$, $1)
-  }
-  | cluster_list ',' cluster
-  {
-    $$ = append($1, $3)
+    $$ = $2
   }
 
 cluster:

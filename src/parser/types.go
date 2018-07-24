@@ -37,7 +37,7 @@ type CreateTableStatement struct {
 
 	Columns     []Column
 	PrimaryKeys []Key
-	Clusters    []Cluster
+	Cluster     Cluster
 }
 
 type CreateIndexStatement struct {
@@ -60,7 +60,7 @@ func SetCreateDatabaseStatement(yylex interface{}, action string, target string,
 	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
 }
 
-func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Column, keys []Key, clusters []Cluster) {
+func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []Column, keys []Key, cluster Cluster) {
 	s := CreateTableStatement{
 		Statement: Statement{
 			Action: action,
@@ -69,7 +69,7 @@ func SetCreateTableStatement(yylex interface{}, action string, target string, id
 		},
 		Columns:     cols,
 		PrimaryKeys: keys,
-		Clusters:    clusters,
+		Cluster:     cluster,
 	}
 	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
 }
