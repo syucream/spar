@@ -6,12 +6,6 @@ type DDStatements struct {
 	CreateIndexes   []CreateIndexStatement
 }
 
-type Statement struct {
-	Action string // CREATE, ALTER, DROP
-	Target string // DATABASE, TABLE, INDEX
-	Id     string
-}
-
 type Column struct {
 	Name        string
 	Type        string // BOOL, INT64, ...
@@ -30,20 +24,18 @@ type Cluster struct {
 }
 
 type CreateDatabaseStatement struct {
-	Statement
+	DatabaseId string
 }
 
 type CreateTableStatement struct {
-	Statement
-
+	TableName   string
 	Columns     []Column
 	PrimaryKeys []Key
 	Cluster     Cluster
 }
 
 type CreateIndexStatement struct {
-	Statement
-
+	IndexName    string
 	Unique       string
 	NullFiltered string
 	TableName    string

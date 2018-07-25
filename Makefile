@@ -10,7 +10,7 @@ build: spanner.go
 	go build cmd/check/check.go
 
 check: build
-	./ckeck examples/create_database.sql
-	./ckeck examples/create_table.sql
-	./ckeck examples/create_index.sql
-	./ckeck examples/composition.sql
+	./check examples/create_database.sql > /dev/null
+	./check examples/create_table.sql > /dev/null
+	./check examples/create_index.sql > /dev/null
+	./check examples/composition.sql > /dev/null

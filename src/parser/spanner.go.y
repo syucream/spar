@@ -5,24 +5,16 @@ import (
 	"github.com/syucream/spar/src/types"
 )
 
-func SetCreateDatabaseStatement(yylex interface{}, action string, target string, id string) {
+func SetCreateDatabaseStatement(yylex interface{}, action string, target string, databaseId string) {
 	s := types.CreateDatabaseStatement{
-		Statement: types.Statement{
-			Action: action,
-			Target: target,
-			Id:     id,
-		},
+		DatabaseId: databaseId,
 	}
 	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
 }
 
-func SetCreateTableStatement(yylex interface{}, action string, target string, id string, cols []types.Column, keys []types.Key, cluster types.Cluster) {
+func SetCreateTableStatement(yylex interface{}, action string, target string, tableName string, cols []types.Column, keys []types.Key, cluster types.Cluster) {
 	s := types.CreateTableStatement{
-		Statement: types.Statement{
-			Action: action,
-			Target: target,
-			Id:     id,
-		},
+		TableName:   tableName,
 		Columns:     cols,
 		PrimaryKeys: keys,
 		Cluster:     cluster,
@@ -30,13 +22,9 @@ func SetCreateTableStatement(yylex interface{}, action string, target string, id
 	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
 }
 
-func SetCreateIndexStatement(yylex interface{}, action string, target string, id string, unique string, nullFiltered string, tableName string, keys []types.Key) {
+func SetCreateIndexStatement(yylex interface{}, action string, target string, indexName string, unique string, nullFiltered string, tableName string, keys []types.Key) {
 	s := types.CreateIndexStatement{
-		Statement: types.Statement{
-			Action: action,
-			Target: target,
-			Id:     id,
-		},
+		IndexName: indexName,
 		TableName: tableName,
 		Keys:      keys,
 	}
