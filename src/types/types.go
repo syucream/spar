@@ -26,6 +26,14 @@ type Cluster struct {
 	OnDelete  string
 }
 
+type StoringClause struct {
+	ColumnNames []string
+}
+
+type Interleave struct {
+	TableName string
+}
+
 type Alteration interface {
 	Alter()
 }
@@ -80,11 +88,13 @@ type CreateTableStatement struct {
 }
 
 type CreateIndexStatement struct {
-	IndexName    string
-	Unique       string
-	NullFiltered string
-	TableName    string
-	Keys         []Key
+	IndexName     string
+	Unique        string
+	NullFiltered  string
+	TableName     string
+	Keys          []Key
+	StoringClause StoringClause
+	Interleaves   []Interleave
 }
 
 type AlterTableStatement struct {

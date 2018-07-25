@@ -15,6 +15,9 @@ import (
   key       types.Key
   keys      []types.Key
   clstr     types.Cluster
+  stcls     types.StoringClause
+  intlr     types.Interleave
+  intlrs    []types.Interleave
   alt       types.Alteration
   LastToken int
 }
@@ -55,6 +58,11 @@ import (
 %type<str> not_null_opt
 %type<str> unique_opt
 %type<str> null_filtered_opt
+
+%type<strs> column_name_list
+%type<stcls> storing_clause storing_clause_opt
+%type<intlr> interleave_clause
+%type<intlrs> interleave_clause_list
 
 %type<alt> table_alteration
 %type<alt> table_column_alteration
@@ -269,13 +277,14 @@ not_null_opt:
 create_index:
   CREATE unique_opt null_filtered_opt INDEX index_name ON table_name '(' key_part_list ')' storing_clause_opt interleave_clause_list
   {
-    // TODO Support options
     s := types.CreateIndexStatement{
-      Unique:       $2,
-      NullFiltered: $3,
-      IndexName:    $5,
-      TableName:    $7,
-      Keys:         $9,
+      Unique:        $2,
+      NullFiltered:  $3,
+      IndexName:     $5,
+      TableName:     $7,
+      Keys:          $9,
+      StoringClause: $11,
+      Interleaves:   $12,
     }
     yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
   }
@@ -302,22 +311,51 @@ null_filtered_opt:
 
 storing_clause_opt:
   /* empty */
+  {
+    $$ = types.StoringClause{}
+  }
   | storing_clause
+  {
+    $$ = $1
+  }
 
 storing_clause:
     STORING '(' column_name_list ')'
+  {
+    $$ = types.StoringClause{ColumnNames: $3}
+  }
 
 column_name_list:
     column_name
+  {
+    $$ = make([]string, 0, 1)
+    $$ = append($$, $1)
+  }
   | column_name_list ',' column_name
+  {
+    $$ = append($1, $3)
+  }
 
 interleave_clause_list:
   /* empty */
+  {
+    $$ = make([]types.Interleave, 0, 0)
+  }
   | interleave_clause
+  {
+    $$ = make([]types.Interleave, 0, 1)
+    $$ = append($$, $1)
+  }
   | interleave_clause_list ',' interleave_clause
+  {
+    $$ = append($1, $3)
+  }
 
 interleave_clause:
     INTERLEAVE IN table_name
+  {
+    $$ = types.Interleave{TableName: $3}
+  }
 
 alter_table:
     ALTER TABLE table_name table_alteration
