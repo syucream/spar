@@ -9,3 +9,9 @@ CREATE TABLE Singers (
 ) PRIMARY KEY (SingerId);
 
 CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle);
+
+ALTER TABLE Albums ADD COLUMN MarketingBudget INT64;
+
+DROP TABLE examples;
+
+DROP INDEX example;

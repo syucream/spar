@@ -39,6 +39,9 @@ var keywords = map[string]int{
 	"UNIQUE":        UNIQUE,
 	"NULL_FILTERED": NULL_FILTERED,
 	"STORING":       STORING,
+	"ADD":           ADD,
+	"COLUMN":        COLUMN,
+	"SET":           SET,
 	"true":          true,
 	"null":          null,
 	"allow_commit_timestamp": allow_commit_timestamp,
@@ -90,7 +93,7 @@ func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 			tokVal = table_name
 		case PARENT:
 			tokVal = table_name
-		case LEFT_PARENTHESIS_TOKEN, COMMA_TOKEN:
+		case COLUMN, LEFT_PARENTHESIS_TOKEN, COMMA_TOKEN:
 			tokVal = column_name
 		}
 	}

@@ -15,6 +15,7 @@ import (
   key       types.Key
   keys      []types.Key
   clstr     types.Cluster
+  alt       types.Alteration
   LastToken int
 }
 
@@ -54,6 +55,9 @@ import (
 %type<str> not_null_opt
 %type<str> unique_opt
 %type<str> null_filtered_opt
+
+%type<alt> table_alteration
+%type<alt> table_column_alteration
 
 %start statements
 
@@ -317,16 +321,58 @@ interleave_clause:
 
 alter_table:
     ALTER TABLE table_name table_alteration
+  {
+    s := types.AlterTableStatement{
+      TableName:  $3,
+      Alteration: $4,
+    }
+    yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+  }
   | ALTER TABLE table_name table_column_alteration
+  {
+    s := types.AlterTableStatement{
+      TableName:  $3,
+      Alteration: $4,
+    }
+    yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+  }
 
 table_alteration:
     ADD COLUMN column_def
+  {
+    $$ = &types.AddColumnTableAlteration{
+      Column: $3,
+    }
+  }
   | DROP COLUMN column_name
+  {
+    $$ = &types.DropColumnTableAlteration{
+      ColumnName: $3,
+    }
+  }
   | SET on_delete_opt
+  {
+    $$ = &types.SetTableAlteration{
+      OnDelete: $2,
+    }
+  }
 
 table_column_alteration:
     ALTER COLUMN column_name column_type not_null_opt
+  {
+    $$ = &types.AlterColumnTypesAlteration{
+      ColumnName:  $3,
+      ColumnType:  $4,
+      Nullability: $5,
+    }
+  }
   | ALTER COLUMN column_name SET options_def
+  {
+    $$ = &types.AlterColumnSetAlteration{
+      ColumnName: $3,
+      Options:    $5,
+    }
+  }
 
 drop_table:
     DROP TABLE table_name
