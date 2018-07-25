@@ -4,32 +4,6 @@ package parser
 import (
 	"github.com/syucream/spar/src/types"
 )
-
-func SetCreateDatabaseStatement(yylex interface{}, action string, target string, databaseId string) {
-	s := types.CreateDatabaseStatement{
-		DatabaseId: databaseId,
-	}
-	yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
-}
-
-func SetCreateTableStatement(yylex interface{}, action string, target string, tableName string, cols []types.Column, keys []types.Key, cluster types.Cluster) {
-	s := types.CreateTableStatement{
-		TableName:   tableName,
-		Columns:     cols,
-		PrimaryKeys: keys,
-		Cluster:     cluster,
-	}
-	yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
-}
-
-func SetCreateIndexStatement(yylex interface{}, action string, target string, indexName string, unique string, nullFiltered string, tableName string, keys []types.Key) {
-	s := types.CreateIndexStatement{
-		IndexName: indexName,
-		TableName: tableName,
-		Keys:      keys,
-	}
-	yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
-}
 %}
 
 %union {
@@ -50,6 +24,7 @@ func SetCreateIndexStatement(yylex interface{}, action string, target string, in
 %token<str> NOT NULL
 %token<str> ON DELETE CASCADE NO ACTION
 %token<str> MAX UNIQUE NULL_FILTERED STORING
+%token<str> ADD COLUMN SET
 %token<str> true null allow_commit_timestamp
 %token<empty> '(' ',' ')' ';' '='
 %token<str> CREATE ALTER DROP
@@ -74,7 +49,7 @@ func SetCreateIndexStatement(yylex interface{}, action string, target string, in
 
 %type<clstr> cluster_opt
 %type<clstr> cluster
-%type<str> cluster_on_delete
+%type<str> on_delete_opt
 
 %type<str> not_null_opt
 %type<str> unique_opt
@@ -93,22 +68,29 @@ statement:
     create_database ';'
   | create_table ';'
   | create_index ';'
-  /* TODO
   | alter_table ';'
   | drop_table ';'
   | drop_index ';'
-  */
 
 create_database:
   CREATE DATABASE database_id
   {
-    SetCreateDatabaseStatement(yylex, $1, $2, $3)
+    s := types.CreateDatabaseStatement{
+      DatabaseId: $3,
+    }
+    yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
   }
 
 create_table:
   CREATE TABLE table_name '(' column_def_list ')' primary_key cluster_opt
   {
-    SetCreateTableStatement(yylex, $1, $2, $3, $5, $7, $8)
+    s := types.CreateTableStatement{
+      TableName:   $3,
+      Columns:     $5,
+      PrimaryKeys: $7,
+      Cluster:     $8,
+    }
+    yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
   }
 
 column_def_list:
@@ -180,12 +162,12 @@ cluster_opt:
   }
 
 cluster:
-    INTERLEAVE IN PARENT table_name cluster_on_delete
+    INTERLEAVE IN PARENT table_name on_delete_opt
   {
     $$ = types.Cluster{TableName: $4, OnDelete: $5}
   }
 
-cluster_on_delete:
+on_delete_opt:
   /* empty */
   {
     // default
@@ -283,8 +265,13 @@ not_null_opt:
 create_index:
   CREATE unique_opt null_filtered_opt INDEX index_name ON table_name '(' key_part_list ')' storing_clause_opt interleave_clause_list
   {
-    // TODO Support storing_clause_opt, interleave_clause_list
-    SetCreateIndexStatement(yylex, $1, $4, $5, $2, $3, $7, $9)
+    // TODO Support options
+    s := types.CreateIndexStatement{
+      IndexName: $4,
+      TableName: $6,
+      Keys:      $9,
+    }
+    yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
   }
 
 unique_opt:
@@ -326,23 +313,36 @@ interleave_clause_list:
 interleave_clause:
     INTERLEAVE IN table_name
 
-/*
 alter_table:
-    ALTER TABLE table_name { table_alteration | table_column_alteration }
+    ALTER TABLE table_name table_alteration
+  | ALTER TABLE table_name table_column_alteration
 
 table_alteration:
-{ ADD COLUMN column_def | DROP COLUMN column_name |
-      SET ON DELETE { CASCADE | NO ACTION } }
+    ADD COLUMN column_def
+  | DROP COLUMN column_name
+  | SET on_delete_opt
 
 table_column_alteration:
-    ALTER COLUMN column_name { { scalar_type | array_type } [NOT NULL] | SET options_def }
+    ALTER COLUMN column_name column_type not_null_opt
+  | ALTER COLUMN column_name SET options_def
 
 drop_table:
     DROP TABLE table_name
+  {
+    s := types.DropTableStatement{
+      TableName: $3,
+    }
+    yylex.(*LexerWrapper).Result.DropTables = append(yylex.(*LexerWrapper).Result.DropTables, s)
+  }
 
 drop_index:
     DROP INDEX index_name
-*/
+  {
+    s := types.DropIndexStatement{
+      IndexName: $3,
+    }
+    yylex.(*LexerWrapper).Result.DropIndexes = append(yylex.(*LexerWrapper).Result.DropIndexes, s)
+  }
 
 int64_value:
     decimal_value

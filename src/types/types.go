@@ -4,6 +4,8 @@ type DDStatements struct {
 	CreateDatabases []CreateDatabaseStatement
 	CreateTables    []CreateTableStatement
 	CreateIndexes   []CreateIndexStatement
+	DropTables      []DropTableStatement
+	DropIndexes     []DropIndexStatement
 }
 
 type Column struct {
@@ -40,4 +42,12 @@ type CreateIndexStatement struct {
 	NullFiltered string
 	TableName    string
 	Keys         []Key
+}
+
+type DropTableStatement struct {
+	TableName string
+}
+
+type DropIndexStatement struct {
+	IndexName string
 }
