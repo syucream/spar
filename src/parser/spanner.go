@@ -836,39 +836,41 @@ yydefault:
 		{
 			// TODO Support options
 			s := types.CreateIndexStatement{
-				IndexName: yyDollar[4].str,
-				TableName: yyDollar[6].str,
-				Keys:      yyDollar[9].keys,
+				Unique:       yyDollar[2].str,
+				NullFiltered: yyDollar[3].str,
+				IndexName:    yyDollar[5].str,
+				TableName:    yyDollar[7].str,
+				Keys:         yyDollar[9].keys,
 			}
 			yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
 		}
 	case 46:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:279
+		//line src/parser/spanner.go.y:281
 		{
 			yyVAL.str = ""
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:283
+		//line src/parser/spanner.go.y:285
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 48:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line src/parser/spanner.go.y:289
+		//line src/parser/spanner.go.y:291
 		{
 			yyVAL.str = ""
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:293
+		//line src/parser/spanner.go.y:295
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 66:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:331
+		//line src/parser/spanner.go.y:333
 		{
 			s := types.DropTableStatement{
 				TableName: yyDollar[3].str,
@@ -877,7 +879,7 @@ yydefault:
 		}
 	case 67:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line src/parser/spanner.go.y:340
+		//line src/parser/spanner.go.y:342
 		{
 			s := types.DropIndexStatement{
 				IndexName: yyDollar[3].str,
@@ -886,13 +888,13 @@ yydefault:
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:349
+		//line src/parser/spanner.go.y:351
 		{
 			yyVAL.str = yyDollar[1].str
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line src/parser/spanner.go.y:353
+		//line src/parser/spanner.go.y:355
 		{
 			yyVAL.str = yyDollar[1].str
 		}

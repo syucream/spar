@@ -267,9 +267,11 @@ create_index:
   {
     // TODO Support options
     s := types.CreateIndexStatement{
-      IndexName: $4,
-      TableName: $6,
-      Keys:      $9,
+      Unique:       $2,
+      NullFiltered: $3,
+      IndexName:    $5,
+      TableName:    $7,
+      Keys:         $9,
     }
     yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
   }
