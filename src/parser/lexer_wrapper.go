@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/syucream/spar/src/lexer"
@@ -10,6 +11,7 @@ import (
 type LexerWrapper struct {
 	impl   *lexer.LexerImpl
 	Result types.DDStatements
+	Err    error
 }
 
 func NewLexerWrapper(li *lexer.LexerImpl) *LexerWrapper {
@@ -38,5 +40,5 @@ func (l *LexerWrapper) Lex(lval *yySymType) int {
 }
 
 func (l *LexerWrapper) Error(e string) {
-	panic(e)
+	l.Err = fmt.Errorf(e)
 }

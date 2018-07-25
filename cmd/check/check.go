@@ -17,6 +17,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	stmts := parser.Parse(strings.NewReader(string(data)))
+	stmts, err := parser.Parse(strings.NewReader(string(data)))
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(stmts)
 }
