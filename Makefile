@@ -7,13 +7,13 @@ spanner.go:
 	goyacc -o src/parser/spanner.go src/parser/spanner.go.y
 
 build: spanner.go
-	go build cmd/check/check.go
+	go build cmd/spck/spck.go
 
 check: build
-	cat examples/create_database.sql | ./check
-	cat examples/create_table.sql | ./check
-	cat examples/create_index.sql | ./check
-	cat examples/alter_table.sql | ./check
-	cat examples/drop_table.sql | ./check
-	cat examples/drop_index.sql | ./check
-	cat examples/composition.sql | ./check
+	cat examples/create_database.sql | ./spck
+	cat examples/create_table.sql | ./spck
+	cat examples/create_index.sql | ./spck
+	cat examples/alter_table.sql | ./spck
+	cat examples/drop_table.sql | ./spck
+	cat examples/drop_index.sql | ./spck
+	cat examples/composition.sql | ./spck
