@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"regexp"
 	"strconv"
 )
 
@@ -68,6 +69,11 @@ var symbols = map[string]int{
 	"=": EQUAL_TOKEN,
 }
 
+var (
+	databaseIdRegexp = regexp.MustCompile(`[a-z][a-z0-9_\-]*[a-z0-9]`)
+	nameAttrRegexp   = regexp.MustCompile(`[a-zA-Z][a-zA-Z0-9_]+`)
+)
+
 type KeywordTokenizer struct{}
 
 // FromStrLit tokenize lit to a token pre-defined by goyacc with last token as a hint.
@@ -81,20 +87,34 @@ func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
 		tokVal = v
 	} else if _, err := strconv.ParseInt(lit, 10, 0); err == nil {
 		tokVal = decimal_value
+	} else if _, err := strconv.ParseInt(lit, 16, 0); err == nil {
+		tokVal = hex_value
 	} else {
 		switch lastToken {
 		case DATABASE:
-			tokVal = database_id
+			if databaseIdRegexp.MatchString(lit) {
+				tokVal = database_id
+			}
 		case TABLE:
-			tokVal = table_name
+			if nameAttrRegexp.MatchString(lit) {
+				tokVal = table_name
+			}
 		case INDEX:
-			tokVal = index_name
+			if nameAttrRegexp.MatchString(lit) {
+				tokVal = index_name
+			}
 		case ON: // TODO duplicated token! Check pre-parsed tokens more!
-			tokVal = table_name
+			if nameAttrRegexp.MatchString(lit) {
+				tokVal = table_name
+			}
 		case PARENT:
-			tokVal = table_name
+			if nameAttrRegexp.MatchString(lit) {
+				tokVal = table_name
+			}
 		case COLUMN, LEFT_PARENTHESIS_TOKEN, COMMA_TOKEN:
-			tokVal = column_name
+			if nameAttrRegexp.MatchString(lit) {
+				tokVal = column_name
+			}
 		}
 	}
 
