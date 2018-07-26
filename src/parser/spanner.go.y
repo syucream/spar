@@ -439,23 +439,3 @@ int64_value:
   {
     $$ = $1
   }
-
-/* TODO Check some literals satisfy regexp specs on tokenizer.
-decimal_value:
-  [-]0—9+
-
-hex_value:
-  [-]0x{0—9|a—f|A—F}+
-
-database_id:
-  {a—z}[{a—z|0—9|_|-}+]{a—z|0—9}
-
-table_name:
-  {a—z|A—Z}[{a—z|A—Z|0—9|_}+]
-
-column_name:
-  {a—z|A—Z}[{a—z|A—Z|0—9|_}+]
-
-index_name:
-  {a—z|A—Z}[{a—z|A—Z|0—9|_}+]
-*/
