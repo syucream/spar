@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,15 +10,13 @@ import (
 )
 
 func main() {
-	pathToSql := os.Args[1]
-	data, err := ioutil.ReadFile(pathToSql)
+	data, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	stmts, err := parser.Parse(strings.NewReader(string(data)))
+	_, err = parser.Parse(strings.NewReader(string(data)))
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(stmts)
 }
