@@ -7,15 +7,16 @@ import (
 	"github.com/syucream/spar/src/types"
 )
 
+// Parse returns parsed Spanner DDL statements.
 func Parse(r io.Reader) (*types.DDStatements, error) {
-	impl := lexer.NewLexerImpl(r, &KeywordTokenizer{})
-	l := NewLexerWrapper(impl)
+	impl := lexer.NewLexerImpl(r, &keywordTokenizer{})
+	l := newLexerWrapper(impl)
 
 	yyParse(l)
 
-	if l.Err != nil {
-		return nil, l.Err
+	if l.err != nil {
+		return nil, l.err
 	} else {
-		return &l.Result, nil
+		return &l.result, nil
 	}
 }

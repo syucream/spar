@@ -74,11 +74,11 @@ var (
 	nameAttrRegexp   = regexp.MustCompile(`[a-zA-Z][a-zA-Z0-9_]+`)
 )
 
-type KeywordTokenizer struct{}
+type keywordTokenizer struct{}
 
 // FromStrLit tokenize lit to a token pre-defined by goyacc with last token as a hint.
 // TODO Check some literals satisfy regexp specs.
-func (kt *KeywordTokenizer) FromStrLit(lit string, lastToken int) int {
+func (kt *keywordTokenizer) FromStrLit(lit string, lastToken int) int {
 	tokVal := 0
 
 	if v, ok := keywords[lit]; ok {

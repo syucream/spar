@@ -8,23 +8,19 @@ import (
 	"github.com/syucream/spar/src/types"
 )
 
-type LexerWrapper struct {
+type lexerWrapper struct {
 	impl   *lexer.LexerImpl
-	Result types.DDStatements
-	Err    error
+	result types.DDStatements
+	err    error
 }
 
-func NewLexerWrapper(li *lexer.LexerImpl) *LexerWrapper {
-	return &LexerWrapper{
+func newLexerWrapper(li *lexer.LexerImpl) *lexerWrapper {
+	return &lexerWrapper{
 		impl: li,
-		Result: types.DDStatements{
-			CreateDatabases: []types.CreateDatabaseStatement{},
-			CreateTables:    []types.CreateTableStatement{},
-		},
 	}
 }
 
-func (l *LexerWrapper) Lex(lval *yySymType) int {
+func (l *lexerWrapper) Lex(lval *yySymType) int {
 	r, err := l.impl.Lex(lval.LastToken)
 	if err != nil {
 		log.Fatal(err)
@@ -39,6 +35,6 @@ func (l *LexerWrapper) Lex(lval *yySymType) int {
 	return tokVal
 }
 
-func (l *LexerWrapper) Error(e string) {
-	l.Err = fmt.Errorf(e)
+func (l *lexerWrapper) Error(e string) {
+	l.err = fmt.Errorf(e)
 }

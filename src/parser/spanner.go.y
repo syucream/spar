@@ -90,7 +90,7 @@ create_database:
     s := types.CreateDatabaseStatement{
       DatabaseId: $3,
     }
-    yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
+    yylex.(*lexerWrapper).result.CreateDatabases = append(yylex.(*lexerWrapper).result.CreateDatabases, s)
   }
 
 create_table:
@@ -102,7 +102,7 @@ create_table:
       PrimaryKeys: $7,
       Cluster:     $8,
     }
-    yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
+    yylex.(*lexerWrapper).result.CreateTables = append(yylex.(*lexerWrapper).result.CreateTables, s)
   }
 
 column_def_list:
@@ -286,7 +286,7 @@ create_index:
       StoringClause: $11,
       Interleaves:   $12,
     }
-    yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
+    yylex.(*lexerWrapper).result.CreateIndexes = append(yylex.(*lexerWrapper).result.CreateIndexes, s)
   }
 
 unique_opt:
@@ -364,7 +364,7 @@ alter_table:
       TableName:  $3,
       Alteration: $4,
     }
-    yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+    yylex.(*lexerWrapper).result.AlterTables = append(yylex.(*lexerWrapper).result.AlterTables, s)
   }
   | ALTER TABLE table_name table_column_alteration
   {
@@ -372,7 +372,7 @@ alter_table:
       TableName:  $3,
       Alteration: $4,
     }
-    yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+    yylex.(*lexerWrapper).result.AlterTables = append(yylex.(*lexerWrapper).result.AlterTables, s)
   }
 
 table_alteration:
@@ -418,7 +418,7 @@ drop_table:
     s := types.DropTableStatement{
       TableName: $3,
     }
-    yylex.(*LexerWrapper).Result.DropTables = append(yylex.(*LexerWrapper).Result.DropTables, s)
+    yylex.(*lexerWrapper).result.DropTables = append(yylex.(*lexerWrapper).result.DropTables, s)
   }
 
 drop_index:
@@ -427,7 +427,7 @@ drop_index:
     s := types.DropIndexStatement{
       IndexName: $3,
     }
-    yylex.(*LexerWrapper).Result.DropIndexes = append(yylex.(*LexerWrapper).Result.DropIndexes, s)
+    yylex.(*lexerWrapper).result.DropIndexes = append(yylex.(*lexerWrapper).result.DropIndexes, s)
   }
 
 int64_value:

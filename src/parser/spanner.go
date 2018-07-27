@@ -613,7 +613,7 @@ yydefault:
 			s := types.CreateDatabaseStatement{
 				DatabaseId: yyDollar[3].str,
 			}
-			yylex.(*LexerWrapper).Result.CreateDatabases = append(yylex.(*LexerWrapper).Result.CreateDatabases, s)
+			yylex.(*lexerWrapper).result.CreateDatabases = append(yylex.(*lexerWrapper).result.CreateDatabases, s)
 		}
 	case 10:
 		yyDollar = yyS[yypt-8 : yypt+1]
@@ -625,7 +625,7 @@ yydefault:
 				PrimaryKeys: yyDollar[7].keys,
 				Cluster:     yyDollar[8].clstr,
 			}
-			yylex.(*LexerWrapper).Result.CreateTables = append(yylex.(*LexerWrapper).Result.CreateTables, s)
+			yylex.(*lexerWrapper).result.CreateTables = append(yylex.(*lexerWrapper).result.CreateTables, s)
 		}
 	case 11:
 		yyDollar = yyS[yypt-0 : yypt+1]
@@ -847,7 +847,7 @@ yydefault:
 				StoringClause: yyDollar[11].stcls,
 				Interleaves:   yyDollar[12].intlrs,
 			}
-			yylex.(*LexerWrapper).Result.CreateIndexes = append(yylex.(*LexerWrapper).Result.CreateIndexes, s)
+			yylex.(*lexerWrapper).result.CreateIndexes = append(yylex.(*lexerWrapper).result.CreateIndexes, s)
 		}
 	case 46:
 		yyDollar = yyS[yypt-0 : yypt+1]
@@ -937,7 +937,7 @@ yydefault:
 				TableName:  yyDollar[3].str,
 				Alteration: yyDollar[4].alt,
 			}
-			yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+			yylex.(*lexerWrapper).result.AlterTables = append(yylex.(*lexerWrapper).result.AlterTables, s)
 		}
 	case 60:
 		yyDollar = yyS[yypt-4 : yypt+1]
@@ -947,7 +947,7 @@ yydefault:
 				TableName:  yyDollar[3].str,
 				Alteration: yyDollar[4].alt,
 			}
-			yylex.(*LexerWrapper).Result.AlterTables = append(yylex.(*LexerWrapper).Result.AlterTables, s)
+			yylex.(*lexerWrapper).result.AlterTables = append(yylex.(*lexerWrapper).result.AlterTables, s)
 		}
 	case 61:
 		yyDollar = yyS[yypt-3 : yypt+1]
@@ -999,7 +999,7 @@ yydefault:
 			s := types.DropTableStatement{
 				TableName: yyDollar[3].str,
 			}
-			yylex.(*LexerWrapper).Result.DropTables = append(yylex.(*LexerWrapper).Result.DropTables, s)
+			yylex.(*lexerWrapper).result.DropTables = append(yylex.(*lexerWrapper).result.DropTables, s)
 		}
 	case 67:
 		yyDollar = yyS[yypt-3 : yypt+1]
@@ -1008,7 +1008,7 @@ yydefault:
 			s := types.DropIndexStatement{
 				IndexName: yyDollar[3].str,
 			}
-			yylex.(*LexerWrapper).Result.DropIndexes = append(yylex.(*LexerWrapper).Result.DropIndexes, s)
+			yylex.(*lexerWrapper).result.DropIndexes = append(yylex.(*lexerWrapper).result.DropIndexes, s)
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
