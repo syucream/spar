@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/syucream/spar/src/lexer"
@@ -9,9 +8,10 @@ import (
 )
 
 type lexerWrapper struct {
-	impl   *lexer.LexerImpl
-	result types.DDStatements
-	err    error
+	impl        *lexer.LexerImpl
+	result      types.DDStatements
+	lastLiteral string
+	err         error
 }
 
 func newLexerWrapper(li *lexer.LexerImpl) *lexerWrapper {
@@ -25,8 +25,7 @@ func (l *lexerWrapper) Lex(lval *yySymType) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// To debug lexer
-	// log.Print(r)
+	l.lastLiteral = r.Literal
 
 	tokVal := r.Token
 	lval.str = r.Literal
@@ -35,6 +34,6 @@ func (l *lexerWrapper) Lex(lval *yySymType) int {
 	return tokVal
 }
 
-func (l *lexerWrapper) Error(e string) {
-	l.err = fmt.Errorf(e)
+func (l *lexerWrapper) Error(errStr string) {
+	l.err = wrapParseError(l.lastLiteral, errStr)
 }
