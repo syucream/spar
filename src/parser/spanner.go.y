@@ -15,7 +15,9 @@ import (
   cols      []types.Column
   key       types.Key
   keys      []types.Key
+  keyorder  types.KeyOrder
   clstr     types.Cluster
+  ondelete  types.OnDelete
   stcls     types.StoringClause
   intlr     types.Interleave
   intlrs    []types.Interleave
@@ -47,14 +49,14 @@ import (
 %type<str> options_def
 %token<str> decimal_value hex_value
 
-%type<str> key_order_opt
+%type<keyorder> key_order_opt
 %type<key> key_part
 %type<keys> key_part_list
 %type<keys> primary_key
 
 %type<clstr> cluster_opt
 %type<clstr> cluster
-%type<str> on_delete_opt
+%type<ondelete> on_delete_opt
 
 %type<flag> not_null_opt
 %type<flag> unique_opt
@@ -147,21 +149,21 @@ key_part_list:
 key_part:
   column_name key_order_opt
   {
-    $$ = types.Key{Name: $1, Order: $2}
+    $$ = types.Key{Name: $1, KeyOrder: $2}
   }
 
 key_order_opt:
   /* empty */
   {
-    $$ = "ASC"
+    $$ = types.Asc
   }
   | ASC
   {
-    $$ = $1
+    $$ = types.Asc
   }
   | DESC
   {
-    $$ = $1
+    $$ = types.Desc
   }
 
 cluster_opt:
@@ -184,15 +186,15 @@ on_delete_opt:
   /* empty */
   {
     // default
-    $$ = "NO ACTION"
+    $$ = types.NoAction
   }
   | ON DELETE CASCADE
   {
-    $$ = $3
+    $$ = types.Cascade
   }
   | ON DELETE NO ACTION
   {
-    $$ = $3 + " " + $4
+    $$ = types.NoAction
   }
 
 column_type:

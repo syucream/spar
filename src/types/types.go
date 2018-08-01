@@ -6,6 +6,19 @@ const (
 	False = false
 )
 
+type OnDelete int
+type KeyOrder int
+
+const (
+	NoAction OnDelete = iota
+	Cascade
+)
+
+const (
+	Asc KeyOrder = iota
+	Desc
+)
+
 // DDStatements has parsed statements.
 type DDStatements struct {
 	CreateDatabases []CreateDatabaseStatement
@@ -26,14 +39,14 @@ type Column struct {
 
 // Key is a table key.
 type Key struct {
-	Name  string
-	Order string
+	Name     string
+	KeyOrder KeyOrder
 }
 
 // Cluster is a Spanner table cluster.
 type Cluster struct {
 	TableName string
-	OnDelete  string
+	OnDelete  OnDelete
 }
 
 // StoringClause is a storing clause info.
@@ -69,7 +82,7 @@ func (self *DropColumnTableAlteration) Alter() {}
 
 // SetTableAlteration is a alter table operation, corresponding to 'SET'.
 type SetTableAlteration struct {
-	OnDelete string
+	OnDelete OnDelete
 }
 
 // Alter satisfies Alteration interface
