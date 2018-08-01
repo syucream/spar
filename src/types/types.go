@@ -1,5 +1,11 @@
 package types
 
+// NOTE aliases to refer from parser.
+const (
+	True  = true
+	False = false
+)
+
 // DDStatements has parsed statements.
 type DDStatements struct {
 	CreateDatabases []CreateDatabaseStatement
@@ -12,10 +18,10 @@ type DDStatements struct {
 
 // Column is a table column.
 type Column struct {
-	Name        string
-	Type        string // BOOL, INT64, ...
-	Nullability string
-	Options     string
+	Name    string
+	Type    string // BOOL, INT64, ...
+	NotNull bool
+	Options string
 }
 
 // Key is a table key.
@@ -71,9 +77,9 @@ func (self *SetTableAlteration) Alter() {}
 
 // AlterColumnTypesAlteration is a alter table operation, corresponding to 'ALTER COLUMN'.
 type AlterColumnTypesAlteration struct {
-	ColumnName  string
-	ColumnType  string
-	Nullability string
+	ColumnName string
+	ColumnType string
+	NotNull    bool
 }
 
 // Alter satisfies Alteration interface
@@ -104,8 +110,8 @@ type CreateTableStatement struct {
 // CreateIndexStatement is a 'CREATE INDEX' statement info.
 type CreateIndexStatement struct {
 	IndexName     string
-	Unique        string
-	NullFiltered  string
+	Unique        bool
+	NullFiltered  bool
 	TableName     string
 	Keys          []Key
 	StoringClause StoringClause

@@ -16,3 +16,6 @@ y.*
 
 # Binary
 /spck
+
+# IDEA
+.idea

@@ -8,6 +8,7 @@ import (
 
 %union {
   empty     struct{}
+  flag      bool
   str       string
   strs      []string
   col       types.Column
@@ -55,9 +56,9 @@ import (
 %type<clstr> cluster
 %type<str> on_delete_opt
 
-%type<str> not_null_opt
-%type<str> unique_opt
-%type<str> null_filtered_opt
+%type<flag> not_null_opt
+%type<flag> unique_opt
+%type<flag> null_filtered_opt
 
 %type<strs> column_name_list
 %type<stcls> storing_clause storing_clause_opt
@@ -123,7 +124,7 @@ column_def_list:
 column_def:
   column_name column_type not_null_opt options_def
   {
-    $$ = types.Column{Name: $1, Type: $2, Nullability: $3, Options: $4}
+    $$ = types.Column{Name: $1, Type: $2, NotNull: $3, Options: $4}
   }
 
 primary_key:
@@ -267,11 +268,11 @@ options_def:
 not_null_opt:
   /* empty */
   {
-    $$ = "NULL"
+    $$ = types.False
   }
   | NOT NULL
   {
-    $$ = $1 + " " + $2
+    $$ = types.True
   }
   
 create_index:
@@ -292,21 +293,21 @@ create_index:
 unique_opt:
   /* empty */
   {
-    $$ = ""
+    $$ = types.False
   }
   | UNIQUE
   {
-    $$ = $1
+    $$ = types.True
   }
 
 null_filtered_opt:
   /* empty */
   {
-    $$ = ""
+    $$ = types.False
   }
   | NULL_FILTERED
   {
-    $$ = $1
+    $$ = types.True
   }
 
 storing_clause_opt:
@@ -401,7 +402,7 @@ table_column_alteration:
     $$ = &types.AlterColumnTypesAlteration{
       ColumnName:  $3,
       ColumnType:  $4,
-      Nullability: $5,
+      NotNull:     $5,
     }
   }
   | ALTER COLUMN column_name SET options_def
