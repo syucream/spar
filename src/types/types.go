@@ -8,6 +8,7 @@ const (
 
 type OnDelete int
 type KeyOrder int
+type ScalarColumnTypeTag int
 
 const (
 	NoAction OnDelete = iota
@@ -17,6 +18,16 @@ const (
 const (
 	Asc KeyOrder = iota
 	Desc
+)
+
+const (
+	Bool ScalarColumnTypeTag = iota
+	Int64
+	Float64
+	String
+	Bytes
+	Date
+	Timestamp
 )
 
 // DDStatements has parsed statements.
@@ -32,9 +43,15 @@ type DDStatements struct {
 // Column is a table column.
 type Column struct {
 	Name    string
-	Type    string // BOOL, INT64, ...
+	Type    ColumnType
 	NotNull bool
 	Options string
+}
+
+type ColumnType struct {
+	TypeTag ScalarColumnTypeTag
+	Length  int64
+	IsArray bool
 }
 
 // Key is a table key.
@@ -91,7 +108,7 @@ func (self *SetTableAlteration) Alter() {}
 // AlterColumnTypesAlteration is a alter table operation, corresponding to 'ALTER COLUMN'.
 type AlterColumnTypesAlteration struct {
 	ColumnName string
-	ColumnType string
+	ColumnType ColumnType
 	NotNull    bool
 }
 

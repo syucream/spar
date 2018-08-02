@@ -2,6 +2,8 @@
 package parser
 
 import (
+    "strconv"
+
 	"github.com/syucream/spar/src/types"
 )
 %}
@@ -9,10 +11,12 @@ import (
 %union {
   empty     struct{}
   flag      bool
+  i64       int64
   str       string
   strs      []string
   col       types.Column
   cols      []types.Column
+  coltype   types.ColumnType
   key       types.Key
   keys      []types.Key
   keyorder  types.KeyOrder
@@ -45,7 +49,8 @@ import (
 
 %type<col> column_def
 %type<cols> column_def_list
-%type<str> column_type scalar_type array_type length int64_value
+%type<coltype> column_type scalar_type array_type
+%type<i64> length int64_value
 %type<str> options_def
 %token<str> decimal_value hex_value
 
@@ -210,31 +215,31 @@ column_type:
 scalar_type:
     BOOL
   {
-    $$ = $1
+    $$ = types.ColumnType{TypeTag: types.Bool}
   }
   | INT64
   {
-    $$ = $1
+    $$ = types.ColumnType{TypeTag: types.Int64}
   }
   | FLOAT64
   {
-    $$ = $1
+    $$ = types.ColumnType{TypeTag: types.Float64}
   }
   | STRING '(' length ')'
   {
-    $$ = $1 + "(" + $3 + ")"
+    $$ = types.ColumnType{TypeTag: types.String, Length: $3}
   }
   | BYTES '(' length ')'
   {
-    $$ = $1 + "(" + $3 + ")"
+    $$ = types.ColumnType{TypeTag: types.Bytes, Length: $3}
   }
   | DATE
   {
-    $$ = $1
+    $$ = types.ColumnType{TypeTag: types.Date}
   }
   | TIMESTAMP
   {
-    $$ = $1
+    $$ = types.ColumnType{TypeTag: types.Timestamp}
   }
 
 length:
@@ -244,13 +249,14 @@ length:
   }
   | MAX
   {
-    $$ = $1
+    $$ = 10485760
   }
 
 array_type:
   ARRAY '<' scalar_type '>'
   {
-    $$ = $1 + "(" + $3 + ")"
+    $$ = $3
+    $$.IsArray = types.True
   }
 
 options_def:
@@ -436,9 +442,11 @@ drop_index:
 int64_value:
     decimal_value
   {
-    $$ = $1
+    v, _ := strconv.ParseInt($1, 10, 64)
+    $$ = v
   }
   | hex_value
   {
-    $$ = $1
+    v, _ := strconv.ParseInt($1, 16, 64)
+    $$ = v
   }
