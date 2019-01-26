@@ -6,6 +6,7 @@ CREATE TABLE Singers (
   LastName   STRING(1024),
   SingerInfo BYTES(MAX),
   BirthDate  DATE,
+  SongIDs    ARRAY<INT64>,
 ) PRIMARY KEY (SingerId);
 
 CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle);
