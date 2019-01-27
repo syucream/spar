@@ -28,6 +28,8 @@ const (
 	RIGHT_PARENTHESIS // )
 	SEMICOLON         // ;
 	EQUAL             // =
+	ANGLE_LEFT        // <
+	ANGLE_RIGHT       // >
 )
 
 // Scanner represents a lexical scanner.
@@ -75,6 +77,11 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		return SEMICOLON, string(ch)
 	case '=':
 		return EQUAL, string(ch)
+
+	case '<':
+		return ANGLE_LEFT, string(ch)
+	case '>':
+		return ANGLE_RIGHT, string(ch)
 	}
 
 	return ILLEGAL, string(ch)

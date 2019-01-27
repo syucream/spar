@@ -11,6 +11,8 @@ const (
 	COMMA_TOKEN             = int(',')
 	SEMICOLON_TOKEN         = int(';')
 	EQUAL_TOKEN             = int('=')
+	ANGLE_LEFT_TOKEN        = int('<')
+	ANGLE_RIGHT_TOKEN       = int('>')
 )
 
 var keywords = map[string]int{
@@ -67,6 +69,8 @@ var symbols = map[string]int{
 	",": COMMA_TOKEN,
 	";": SEMICOLON_TOKEN,
 	"=": EQUAL_TOKEN,
+	"<": ANGLE_LEFT_TOKEN,
+	">": ANGLE_RIGHT_TOKEN,
 }
 
 var (
